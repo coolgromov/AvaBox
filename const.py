@@ -3,15 +3,15 @@ XML = """<?xml version="1.0"?>
 <allow-access-from domain="*" to-ports="*" />
 </cross-domain-policy>
 """.encode()
-MAX_NAME_LEN = 20 #Максимальная длинна никнейма
-ROOM_LIMIT = 20 #Максимальное количество в локации
-MAX_ONLINE = 350 #Максимальный онлайн на сервере
-CONFIG_ACCEPT_HASH = "" #Проверка хеш конфигурации
-CLIENT_ACCEPT_VERSION = "" #Проверка версии клиента
-BLACKLIST_TROPHIES = [] #Черный лист титулов
-PREMIUM_TROPHIES = [] #Белый лист титулов
-BLACKLIST_BUBBLES = [] #Черный лист балунов
-PREMIUM_BUBBLES = [] #Белый лист балунов
+MAX_NAME_LEN = 20 #РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅРЅР° РЅРёРєРЅРµР№РјР°
+ROOM_LIMIT = 20 #РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РІ Р»РѕРєР°С†РёРё
+MAX_ONLINE = 350 #РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№ РѕРЅР»Р°Р№РЅ РЅР° СЃРµСЂРІРµСЂРµ
+CONFIG_ACCEPT_HASH = "" #РџСЂРѕРІРµСЂРєР° С…РµС€ РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+CLIENT_ACCEPT_VERSION = "" #РџСЂРѕРІРµСЂРєР° РІРµСЂСЃРёРё РєР»РёРµРЅС‚Р°
+BLACKLIST_TROPHIES = [] #Р§РµСЂРЅС‹Р№ Р»РёСЃС‚ С‚РёС‚СѓР»РѕРІ
+PREMIUM_TROPHIES = [] #Р‘РµР»С‹Р№ Р»РёСЃС‚ С‚РёС‚СѓР»РѕРІ
+BLACKLIST_BUBBLES = [] #Р§РµСЂРЅС‹Р№ Р»РёСЃС‚ Р±Р°Р»СѓРЅРѕРІ
+PREMIUM_BUBBLES = [] #Р‘РµР»С‹Р№ Р»РёСЃС‚ Р±Р°Р»СѓРЅРѕРІ
 room_items = [{"tpid": "prtrWll", "d": 3, "oid": 1, "x": 0.0, "y": 0.0, "z": 0.0},
               {"tpid": "prtrWll", "d": 5, "oid": 2, "x": 13.0, "y": 0.0, "z": 0.0},
               {"tpid": "prtrFlr", "d": 5, "oid": 3, "x": 0.0, "y": 0.0, "z": 0.0},
