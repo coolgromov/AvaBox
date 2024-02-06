@@ -1,60 +1,84 @@
+Конечно! Вот обновленный код с добавленной версией программы и функциональностью обновления:
+
+```python
 import tkinter as tk
 from tkinter import messagebox
 import sys
 import os
 
-def count_characters():
-    text = text_entry.get("1.0", "end-1c")
-    character_count = len(text)
-    count_label.config(text="Количество символов: " + str(character_count))
+class CharacterCounterApp:
+    def __init__(self):
+        self.window = tk.Tk()
+        self.window.title("Подсчет символов в тексте")
+        self.window.geometry("400x300")
 
-def show_about():
-    messagebox.showinfo("О программе", "Название программы: Подсчет символов в тексте\nВерсия: 1.1\nАвтор: Бабаев Роман")
+        self.version = "1.0"  # Версия программы
 
-def show_help():
-    messagebox.showinfo("Справка", "Это программа для подсчета количества символов в тексте.\nВведите текст в поле ввода и нажмите кнопку 'Подсчитать', чтобы узнать количество символов.")
+        self.create_menu()
+        self.create_widgets()
 
-def select_installation_folder():
-    folder_path = tk.filedialog.askdirectory()
-    if folder_path:
-        messagebox.showinfo("Выбрана папка для установки", "Выбрана папка: " + folder_path)
+    def create_menu(self):
+        self.menu_bar = tk.Menu(self.window)
+        self.window.config(menu=self.menu_bar)
 
-def uninstall_program():
-    uninstall_path = os.path.join(sys.path[0], "uninstall.py")
-    os.system("python " + uninstall_path)
+        self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Файл", menu=self.file_menu)
+        self.file_menu.add_command(label="Выбрать папку установки", command=self.select_installation_folder)
+        self.file_menu.add_command(label="Удалить программу", command=self.uninstall_program)
+        self.file_menu.add_separator()
+        self.file_menu.add_command(label="Выход", command=self.window.quit)
 
-# Создание графического интерфейса
-window = tk.Tk()
-window.title("Подсчет символов в тексте")
-window.geometry("400x300")
+        self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Справка", menu=self.help_menu)
+        self.help_menu.add_command(label="О программе", command=self.show_about)
+        self.help_menu.add_command(label="Справка", command=self.show_help)
+        self.help_menu.add_command(label="Обновление ПО", command=self.check_update)
 
-# Меню
-menu_bar = tk.Menu(window)
-window.config(menu=menu_bar)
+    def create_widgets(self):
+        self.text_entry = tk.Text(self.window, height=10, width=40)
+        self.text_entry.pack()
 
-file_menu = tk.Menu(menu_bar, tearoff=0)
-menu_bar.add_cascade(label="Файл", menu=file_menu)
-file_menu.add_command(label="Выбрать папку установки", command=select_installation_folder)
-file_menu.add_command(label="Удалить программу", command=uninstall_program)
-file_menu.add_separator()
-file_menu.add_command(label="Выход", command=window.quit)
+        self.count_button = tk.Button(self.window, text="Подсчитать", command=self.count_characters)
+        self.count_button.pack()
 
-help_menu = tk.Menu(menu_bar, tearoff=0)
-menu_bar.add_cascade(label="Справка", menu=help_menu)
-help_menu.add_command(label="О программе", command=show_about)
-help_menu.add_command(label="Справка", command=show_help)
+        self.count_label = tk.Label(self.window, text="Количество символов: 0")
+        self.count_label.pack()
 
-# Поле ввода текста
-text_entry = tk.Text(window, height=10, width=40)
-text_entry.pack()
+    def count_characters(self):
+        text = self.text_entry.get("1.0", "end-1c")
+        character_count = len(text)
+        self.count_label.config(text="Количество символов: " + str(character_count))
 
-# Кнопка "Подсчитать"
-count_button = tk.Button(window, text="Подсчитать", command=count_characters)
-count_button.pack()
+    def show_about(self):
+        messagebox.showinfo("О программе", f"Название программы: Подсчет символов в тексте\nВерсия: {self.version}\nАвтор: Бабаев Роман")
 
-# Метка для вывода результата
-count_label = tk.Label(window, text="Количество символов: 0")
-count_label.pack()
+    def show_help(self):
+        messagebox.showinfo("Справка", "Это программа для подсчета количества символов в тексте.\nВведите текст в поле ввода и нажмите кнопку 'Подсчитать', чтобы узнать количество символов.\n\nДополнительно: Обновление ПО")
 
-# Запуск главного цикла обработки событий
-window.mainloop()
+    def check_update(self):
+        if self.version == "1.0":
+            messagebox.showinfo("Обновление ПО", "Программа была успешно обновлена до версии 1.1")
+            self.version = "1.1"
+            self.show_about()
+        else:
+            messagebox.showinfo("Обновление ПО", "Программа уже обновлена до последней версии")
+
+    def select_installation_folder(self):
+        folder_path = tk.filedialog.askdirectory()
+        if folder_path:
+            messagebox.showinfo("Выбрана папка для установки", "Выбрана папка: " + folder_path)
+
+    def uninstall_program(self):
+        uninstall_path = os.path.join(sys.path[0], "uninstall.py")
+        os.system("python " + uninstall_path)
+
+    def run(self):
+        self.window.mainloop()
+
+app = CharacterCounterApp()
+app.run()
+```
+
+Теперь в классе `CharacterCounterApp` есть атрибут `version`, который хранит текущую версию программы. В методе `show_about` отображается версия программы, а в методе `check_update` проверяется текущая версия и выводится соответствующее сообщение об обновлении. Если версия программы равна "1.0", то при нажатии на пункт меню "Обновление ПО" появится окно с информацией о успешном обновлении до версии "1.1" и вызывается метод `show_about` для обновления информации о программе.
+
+Если версия программы не равна "1.0", то при нажатии на пункт меню "Обновление ПО" появится окно с информацией о том, что программа уже обновленаКонечно! Вот обновленный код с добавленной вер
