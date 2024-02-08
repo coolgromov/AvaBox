@@ -1,84 +1,237 @@
-Конечно! Вот обновленный код с добавленной версией программы и функциональностью обновления:
+Для выполнения лабораторной работы №1 вам потребуется создать четыре файлы Python, используя библиотеку Tkinter для создания графического интерфейса. Каждый файл будет содержать код для решения соответствующей задачи.
+
+Первая часть лабораторной работы:
+
+Файл 1: decimal_to_other_bases.py
+```python
+import tkinter as tk
+
+def convert_to_binary():
+    decimal_value = int(decimal_entry.get())
+    binary_value = bin(decimal_value)[2:]
+    binary_result.config(text=binary_value)
+
+def convert_to_octal():
+    decimal_value = int(decimal_entry.get())
+    octal_value = oct(decimal_value)[2:]
+    octal_result.config(text=octal_value)
+
+def convert_to_hexadecimal():
+    decimal_value = int(decimal_entry.get())
+    hexadecimal_value = hex(decimal_value)[2:]
+    hexadecimal_result.config(text=hexadecimal_value)
+
+root = tk.Tk()
+root.title("Decimal to Other Bases Converter")
+
+decimal_label = tk.Label(root, text="Decimal:")
+decimal_label.pack()
+
+decimal_entry = tk.Entry(root)
+decimal_entry.pack()
+
+binary_label = tk.Label(root, text="Binary:")
+binary_label.pack()
+
+binary_result = tk.Label(root)
+binary_result.pack()
+
+octal_label = tk.Label(root, text="Octal:")
+octal_label.pack()
+
+octal_result = tk.Label(root)
+octal_result.pack()
+
+hexadecimal_label = tk.Label(root, text="Hexadecimal:")
+hexadecimal_label.pack()
+
+hexadecimal_result = tk.Label(root)
+hexadecimal_result.pack()
+
+convert_button = tk.Button(root, text="Convert", command=lambda: [convert_to_binary(), convert_to_octal(), convert_to_hexadecimal()])
+convert_button.pack()
+
+root.mainloop()
+```
+
+Файл 2: binary_to_other_bases.py
+```python
+import tkinter as tk
+
+def convert_to_decimal():
+    binary_value = binary_entry.get()
+    decimal_value = int(binary_value, 2)
+    decimal_result.config(text=decimal_value)
+
+def convert_to_octal():
+    binary_value = binary_entry.get()
+    decimal_value = int(binary_value, 2)
+    octal_value = oct(decimal_value)[2:]
+    octal_result.config(text=octal_value)
+
+def convert_to_hexadecimal():
+    binary_value = binary_entry.get()
+    decimal_value = int(binary_value, 2)
+    hexadecimal_value = hex(decimal_value)[2:]
+    hexadecimal_result.config(text=hexadecimal_value)
+
+root = tk.Tk()
+root.title("Binary to Other Bases Converter")
+
+binary_label = tk.Label(root, text="Binary:")
+binary_label.pack()
+
+binary_entry = tk.Entry(root)
+binary_entry.pack()
+
+decimal_label = tk.Label(root, text="Decimal:")
+decimal_label.pack()
+
+decimal_result = tk.Label(root)
+decimal_result.pack()
+
+octal_label = tk.Label(root, text="Octal:")
+octal_label.pack()
+
+octal_result = tk.Label(root)
+octal_result.pack()
+
+hexadecimal_label = tk.Label(root, text="Hexadecimal:")
+hexadecimal_label.pack()
+
+hexadecimal_result = tk.Label(root)
+hexadecimal_result.pack()
+
+convert_button = tk.Button(root, text="Convert", command=lambda: [convert_to_decimal(), convert_to_octal(), convert_to_hexadecimal()])
+convert_button.pack()
+
+root.mainloop()
+```
+
+Файл 3: octal_addition_and_subtraction.py
+```python
+import tkinter as tk
+
+def convert_to_decimal():
+    octal_value_a = octal_entry_a.get()
+    octal_value_b = octal_entry_b.get()
+    decimal_value_a = int(octal_value_a, 8)
+    decimal_value_b = int(octal_value_b, 8)
+    decimal_result_a.config(text=decimal_value_a)
+    decimal_result_b.config(text=decimal_value_b)
+
+    sum_result = decimal_value_a + decimal_value_b
+    difference_result = decimal_value_a - decimal_value_b
+
+    sum_result_label.config(text=sum_result)
+    difference_result_label.config(text=difference_result)
+
+root = tk.Tk()
+root.title("Octal Addition and Subtraction")
+
+octal_label_a = tk.Label(root, text="Octal A:")
+octal_label_a.pack()
+
+octal_entry_a = tk.Entry(root)
+octal_entry_a.pack()
+
+decimal_label_a = tk.Label(root, text="Decimal A:")
+decimal_label_a.pack()
+
+decimal_result_a = tk.Label(root)
+decimal_result_a.pack()
+
+octal_label_b = tk.Label(root, text="Octal B:")
+octal_label_b.pack()
+
+octal_entry_b = tk.Entry(root)
+octal_entry_b.pack()
+
+decimal_label_b = tk.Label(root, text="Decimal B:")
+decimal_label_b.pack()
+
+decimal_result_b = tk.Label(root)
+decimal_result_b.pack()
+
+sum_label = tk.Label(root, text="Sum:")
+sum_label.pack()
+
+sum_result_label = tk.Label(root)
+sum_result_label.pack()
+
+difference_label =Файл 4: triangle_area.py
+```python
+import tkinter as tk
+
+def calculate_area():
+    base = float(base_entry.get())
+    side = float(side_entry.get())
+    area = (base * side) / 2
+    area_result.config(text=area)
+
+root = tk.Tk()
+root.title("Triangle Area Calculator")
+
+base_label = tk.Label(root, text="Base:")
+base_label.pack()
+
+base_entry = tk.Entry(root)
+base_entry.pack()
+
+side_label = tk.Label(root, text="Side:")
+side_label.pack()
+
+side_entry = tk.Entry(root)
+side_entry.pack()
+
+area_label = tk.Label(root, text="Area:")
+area_label.pack()
+
+area_result = tk.Label(root)
+area_result.pack()
+
+calculate_button = tk.Button(root, text="Calculate", command=calculate_area)
+calculate_button.pack()
+
+root.mainloop()
+```
+
+Извините за пропущенный код. Вот полный код для файла `triangle_area.py`:
 
 ```python
 import tkinter as tk
-from tkinter import messagebox
-import sys
-import os
 
-class CharacterCounterApp:
-    def __init__(self):
-        self.window = tk.Tk()
-        self.window.title("Подсчет символов в тексте")
-        self.window.geometry("400x300")
+def calculate_area():
+    base = float(base_entry.get())
+    side = float(side_entry.get())
+    area = (base * side) / 2
+    area_result.config(text=area)
 
-        self.version = "1.0"  # Версия программы
+root = tk.Tk()
+root.title("Triangle Area Calculator")
 
-        self.create_menu()
-        self.create_widgets()
+base_label = tk.Label(root, text="Base:")
+base_label.pack()
 
-    def create_menu(self):
-        self.menu_bar = tk.Menu(self.window)
-        self.window.config(menu=self.menu_bar)
+base_entry = tk.Entry(root)
+base_entry.pack()
 
-        self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Файл", menu=self.file_menu)
-        self.file_menu.add_command(label="Выбрать папку установки", command=self.select_installation_folder)
-        self.file_menu.add_command(label="Удалить программу", command=self.uninstall_program)
-        self.file_menu.add_separator()
-        self.file_menu.add_command(label="Выход", command=self.window.quit)
+side_label = tk.Label(root, text="Side:")
+side_label.pack()
 
-        self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Справка", menu=self.help_menu)
-        self.help_menu.add_command(label="О программе", command=self.show_about)
-        self.help_menu.add_command(label="Справка", command=self.show_help)
-        self.help_menu.add_command(label="Обновление ПО", command=self.check_update)
+side_entry = tk.Entry(root)
+side_entry.pack()
 
-    def create_widgets(self):
-        self.text_entry = tk.Text(self.window, height=10, width=40)
-        self.text_entry.pack()
+area_label = tk.Label(root, text="Area:")
+area_label.pack()
 
-        self.count_button = tk.Button(self.window, text="Подсчитать", command=self.count_characters)
-        self.count_button.pack()
+area_result = tk.Label(root)
+area_result.pack()
 
-        self.count_label = tk.Label(self.window, text="Количество символов: 0")
-        self.count_label.pack()
+calculate_button = tk.Button(root, text="Calculate", command=calculate_area)
+calculate_button.pack()
 
-    def count_characters(self):
-        text = self.text_entry.get("1.0", "end-1c")
-        character_count = len(text)
-        self.count_label.config(text="Количество символов: " + str(character_count))
-
-    def show_about(self):
-        messagebox.showinfo("О программе", f"Название программы: Подсчет символов в тексте\nВерсия: {self.version}\nАвтор: Бабаев Роман")
-
-    def show_help(self):
-        messagebox.showinfo("Справка", "Это программа для подсчета количества символов в тексте.\nВведите текст в поле ввода и нажмите кнопку 'Подсчитать', чтобы узнать количество символов.\n\nДополнительно: Обновление ПО")
-
-    def check_update(self):
-        if self.version == "1.0":
-            messagebox.showinfo("Обновление ПО", "Программа была успешно обновлена до версии 1.1")
-            self.version = "1.1"
-            self.show_about()
-        else:
-            messagebox.showinfo("Обновление ПО", "Программа уже обновлена до последней версии")
-
-    def select_installation_folder(self):
-        folder_path = tk.filedialog.askdirectory()
-        if folder_path:
-            messagebox.showinfo("Выбрана папка для установки", "Выбрана папка: " + folder_path)
-
-    def uninstall_program(self):
-        uninstall_path = os.path.join(sys.path[0], "uninstall.py")
-        os.system("python " + uninstall_path)
-
-    def run(self):
-        self.window.mainloop()
-
-app = CharacterCounterApp()
-app.run()
+root.mainloop()
 ```
 
-Теперь в классе `CharacterCounterApp` есть атрибут `version`, который хранит текущую версию программы. В методе `show_about` отображается версия программы, а в методе `check_update` проверяется текущая версия и выводится соответствующее сообщение об обновлении. Если версия программы равна "1.0", то при нажатии на пункт меню "Обновление ПО" появится окно с информацией о успешном обновлении до версии "1.1" и вызывается метод `show_about` для обновления информации о программе.
-
-Если версия программы не равна "1.0", то при нажатии на пункт меню "Обновление ПО" появится окно с информацией о том, что программа уже обновленаКонечно! Вот обновленный код с добавленной вер
+Сохраните этот код в файле `triangle_area.py` и запустите его для проверки работы программы.
