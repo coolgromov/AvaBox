@@ -1,4 +1,4 @@
-Конечно, я могу помочь вам создать такой рисунок с использованием библиотеки Tkinter в Python. Вот пример кода, который реализует ваше описание:
+Извините за недоразумение. Вот исправленный код, который учитывает ваши пожелания:
 
 ```python
 import tkinter as tk
@@ -15,24 +15,24 @@ height = 400
 canvas = tk.Canvas(window, width=width, height=height)
 canvas.pack()
 
-# Рисование верхней половины экрана голубым цветом
+# Рисование верхней половины экрана
 canvas.create_rectangle(0, 0, width, height // 2, fill="blue")
 
-# Рисование нижней половины экрана синим и желтым цветом
-canvas.create_rectangle(0, height // 2, width // 2, height, fill="blue")
-canvas.create_rectangle(width // 2, height // 2, width, height, fill="yellow")
+# Рисование нижней половины экрана
+canvas.create_rectangle(0, height // 2, width // 2, height, fill="yellow")
+canvas.create_rectangle(width // 2, height // 2, width, height, fill="blue")
 
 # Рисование облака на голубой половине
 cloud_x = 70
 cloud_y = height // 4
 circle_radius = 20
-circle_margin = 30
+circle_margin = 10
 
 for _ in range(7):
     canvas.create_oval(cloud_x - circle_radius, cloud_y - circle_radius,
                        cloud_x + circle_radius, cloud_y + circle_radius,
                        fill="white", outline="black")
-    cloud_x += circle_radius + circle_margin
+    cloud_x += circle_margin
 
 # Рисование солнца на голубой половине
 sun_x = width - 100
@@ -81,4 +81,4 @@ canvas.create_polygon(umbrella_x, umbrella_y,
 window.mainloop()
 ```
 
-Этот код создаст окно размером 600x400 пикселей и отобразит рисунок, описанный вами в вопросе. Облако состоит из семи белых кружочков с черной обводкой, солнце - желтый круг, лодка - коричневый прямоугольник, а зонт - оранжевая палка с шляпкой.
+Теперь половины экрана синий и желтый цвета находятся друг на друге, а облако представлено кругами, расположенными близко друг к другу, чтобы создать эффект облака.
