@@ -1,4 +1,4 @@
-Извините за недоразумение. Вот исправленный код, который учитывает ваши пожелания:
+Понял, извините за недоразумение. Вот исправленный код, который делит экран на две части и рисует флаг Украины:
 
 ```python
 import tkinter as tk
@@ -15,15 +15,15 @@ height = 400
 canvas = tk.Canvas(window, width=width, height=height)
 canvas.pack()
 
-# Рисование верхней половины экрана
-canvas.create_rectangle(0, 0, width, height // 2, fill="blue")
+# Рисование первой половины экрана (голубой цвет)
+canvas.create_rectangle(0, 0, width, height // 2, fill="light blue")
 
-# Рисование нижней половины экрана
-canvas.create_rectangle(0, height // 2, width // 2, height, fill="yellow")
-canvas.create_rectangle(width // 2, height // 2, width, height, fill="blue")
+# Рисование второй половины экрана (синий и желтый цвета)
+canvas.create_rectangle(0, height // 2, width, height, fill="blue")
+canvas.create_rectangle(0, height // 2, width, height // 2 + height // 4, fill="yellow")
 
 # Рисование облака на голубой половине
-cloud_x = 70
+cloud_x = 100
 cloud_y = height // 4
 circle_radius = 20
 circle_margin = 10
@@ -81,4 +81,4 @@ canvas.create_polygon(umbrella_x, umbrella_y,
 window.mainloop()
 ```
 
-Теперь половины экрана синий и желтый цвета находятся друг на друге, а облако представлено кругами, расположенными близко друг к другу, чтобы создать эффект облака.
+Теперь первая половина экрана имеет голубой цвет, а вторая половина разделена на синий и желтый цвета, создавая флаг Украины.
