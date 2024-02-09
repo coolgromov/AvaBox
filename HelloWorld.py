@@ -1,65 +1,88 @@
-Извините за недоразумение. Вот исправленный код, который использует библиотеку Tkinter и выводит результаты, соответствующие значениям из приведенных тестов:
+Конечно, я могу помочь вам создать такой рисунок с использованием библиотеки Pygame в Python. Вот пример кода, который реализует ваше описание:
 
 ```python
-import tkinter as tk
+import pygame
 
-def calculate_speed():
-    distance = float(distance_entry.get())
-    hours = int(hours_entry.get())
-    minutes = int(minutes_entry.get())
-    seconds = int(seconds_entry.get())
+# Инициализация Pygame
+pygame.init()
 
-    total_hours = hours + minutes / 60 + seconds / 3600
+# Размеры окна
+width = 600
+height = 400
 
-    speed_kmph = distance / total_hours
-    speed_mps = speed_kmph * 1000 / 3600
+# Цвета
+blue = (0, 0, 255)
+yellow = (255, 255, 0)
+white = (255, 255, 255)
+black = (0, 0, 0)
+brown = (139, 69, 19)
+orange = (255, 165, 0)
 
-    speed_kmph_result.config(text=f"{speed_kmph:.1f} км/час")
-    speed_mps_result.config(text=f"{speed_mps:.1f} м/сек")
+# Создание окна
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Мой рисунок")
 
-root = tk.Tk()
-root.title("Speed Calculator")
+# Заполнение верхней половины экрана голубым цветом
+screen.fill(blue, (0, 0, width, height // 2))
 
-distance_label = tk.Label(root, text="Расстояние (в километрах):")
-distance_label.pack()
+# Заполнение нижней половины экрана синим и желтым цветом
+pygame.draw.rect(screen, blue, (0, height // 2, width // 2, height // 2))
+pygame.draw.rect(screen, yellow, (width // 2, height // 2, width // 2, height // 2))
 
-distance_entry = tk.Entry(root)
-distance_entry.pack()
+# Рисование облака на голубой половине
+circle_radius = 20
+circle_margin = 30
+cloud_x = 50
+cloud_y = height // 4
 
-hours_label = tk.Label(root, text="Количество часов:")
-hours_label.pack()
+for i in range(7):
+    pygame.draw.circle(screen, white, (cloud_x, cloud_y), circle_radius)
+    pygame.draw.circle(screen, black, (cloud_x, cloud_y), circle_radius, 1)
+    cloud_x += circle_radius + circle_margin
 
-hours_entry = tk.Entry(root)
-hours_entry.pack()
+# Рисование солнца на голубой половине
+sun_radius = 50
+sun_x = width - 100
+sun_y = height // 4
+pygame.draw.circle(screen, yellow, (sun_x, sun_y), sun_radius)
 
-minutes_label = tk.Label(root, text="Количество минут:")
-minutes_label.pack()
+# Рисование лодки на синей половине
+boat_width = 120
+boat_height = 30
+boat_x = width // 4
+boat_y = height // 2 + 50
 
-minutes_entry = tk.Entry(root)
-minutes_entry.pack()
+pygame.draw.rect(screen, brown, (boat_x, boat_y, boat_width, boat_height))
 
-seconds_label = tk.Label(root, text="Количество секунд:")
-seconds_label.pack()
+# Рисование палки и паруса на синей половине
+mast_width = 10
+mast_height = height // 2 - boat_y
+mast_x = boat_x + boat_width // 2 - mast_width // 2
+mast_y = boat_y
 
-seconds_entry = tk.Entry(root)
-seconds_entry.pack()
+pygame.draw.rect(screen, brown, (mast_x, mast_y, mast_width, mast_height))
+pygame.draw.polygon(screen, brown, [(mast_x, mast_y), (mast_x + mast_width, mast_y), (boat_x + boat_width, mast_y - mast_height // 2)])
 
-speed_kmph_label = tk.Label(root, text="Скорость (в км/час):")
-speed_kmph_label.pack()
+# Рисование палки и зонта на желтой половине
+umbrella_height = height // 2 - mast_height
+umbrella_x = width // 2 + mast_width // 2
+umbrella_y = mast_y
 
-speed_kmph_result = tk.Label(root)
-speed_kmph_result.pack()
+pygame.draw.rect(screen, orange, (umbrella_x, umbrella_y, mast_width, umbrella_height))
+pygame.draw.polygon(screen, orange, [(umbrella_x, umbrella_y), (umbrella_x + mast_width, umbrella_y), (umbrella_x + mast_width // 2, height // 2)])
 
-speed_mps_label = tk.Label(root, text="Скорость (в м/сек):")
-speed_mps_label.pack()
+# Отображение рисунка на экране
+pygame.display.flip()
 
-speed_mps_result = tk.Label(root)
-speed_mps_result.pack()
+# Основной игровой цикл
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
-calculate_button = tk.Button(root, text="Рассчитать", command=calculate_speed)
-calculate_button.pack()
-
-root.mainloop()
+# Завершение работы Pygame
+pygame.quit()
 ```
 
-Сохраните этот код в файле `speed_calculator.py` и запустите его. Вы сможете ввести значения из тестов (например, расстояние - 22, часы - 1, минуты - 25, секунды - 30) и получить результаты, соответствующие значениям из тестов.
+Этот код создаст окно размером 600x400 пикселей и отобразит рисунок, описанный вами в вопросе. Облако состоит из семи белых кружочков с черной обводкой, солнце - желтый круг, лодка - коричневый прямоугольник, а зонт - оранжевая палка с шляпкой.
