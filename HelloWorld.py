@@ -1,84 +1,133 @@
-Понял, извините за недоразумение. Вот исправленный код, который делит экран на две части и рисует флаг Украины:
+Хорошо! Ниже приведен полный код для выполнения лабораторной работы №2, включая оба индивидуальных задания.
 
 ```python
 import tkinter as tk
+from tkinter import messagebox
+import math
 
-# Создание окна
-window = tk.Tk()
-window.title("Мой рисунок")
+# Задание 1: Вычисление значения функции U(x, y)
+def calculate_u(x, y):
+    if x + y == 0:
+        return x * math.exp(-y * x)
+    elif 0 <= x + y < 3:
+        return x * math.sin(x)
+    else:
+        return y**x + math.cos(x)**3
 
-# Размеры окна
-width = 600
-height = 400
+# Задание 2: Вычисление значения функции a
+def calculate_a(fx, y, xy):
+    if xy > 0:
+        return (fx + y)**2 - math.sqrt(fx * y)
+    elif xy < 0:
+        return (fx + y)**2 - math.sqrt(abs(fx * y))
+    else:
+        return (fx + y)**2 + 1
 
-# Создание холста
-canvas = tk.Canvas(window, width=width, height=height)
-canvas.pack()
+# Функция для открытия нового окна с заданием 1
+def open_task1_window():
+    x = float(task1_x_entry.get())
+    y = float(task1_y_entry.get())
 
-# Рисование первой половины экрана (голубой цвет)
-canvas.create_rectangle(0, 0, width, height // 2, fill="light blue")
+    result = calculate_u(x, y)
 
-# Рисование второй половины экрана (синий и желтый цвета)
-canvas.create_rectangle(0, height // 2, width, height, fill="blue")
-canvas.create_rectangle(0, height // 2, width, height // 2 + height // 4, fill="yellow")
+    new_window = tk.Toplevel(root)
+    new_window.title("Задание 1")
+    new_window.geometry("300x200")
 
-# Рисование облака на голубой половине
-cloud_x = 100
-cloud_y = height // 4
-circle_radius = 20
-circle_margin = 10
+    result_label = tk.Label(new_window, text=f"Результат: {result}")
+    result_label.pack()
 
-for _ in range(7):
-    canvas.create_oval(cloud_x - circle_radius, cloud_y - circle_radius,
-                       cloud_x + circle_radius, cloud_y + circle_radius,
-                       fill="white", outline="black")
-    cloud_x += circle_margin
+    formula_photo = tk.PhotoImage(file="formula1.png")
+    formula_label = tk.Label(new_window, image=formula_photo)
+    formula_label.pack()
 
-# Рисование солнца на голубой половине
-sun_x = width - 100
-sun_y = height // 4
-sun_radius = 50
+# Функция для открытия нового окна с заданием 2
+def open_task2_window():
+    fx = float(task2_fx_entry.get())
+    y = float(task2_y_entry.get())
+    xy = float(task2_xy_entry.get())
 
-canvas.create_oval(sun_x - sun_radius, sun_y - sun_radius,
-                   sun_x + sun_radius, sun_y + sun_radius,
-                   fill="yellow")
+    result = calculate_a(fx, y, xy)
 
-# Рисование лодки на синей половине
-boat_x = width // 4
-boat_y = height // 2 + 50
-boat_width = 120
-boat_height = 30
+    new_window = tk.Toplevel(root)
+    new_window.title("Задание 2")
+    new_window.geometry("300x200")
 
-canvas.create_rectangle(boat_x, boat_y, boat_x + boat_width, boat_y + boat_height,
-                        fill="brown")
+    result_label = tk.Label(new_window, text=f"Результат: {result}")
+    result_label.pack()
 
-# Рисование палки и паруса на синей половине
-mast_x = boat_x + boat_width // 2
-mast_y = boat_y
+    formula_photo = tk.PhotoImage(file="formula2.png")
+    formula_label = tk.Label(new_window, image=formula_photo)
+    formula_label.pack()
 
-canvas.create_rectangle(mast_x - 5, mast_y, mast_x + 5, height // 2,
-                        fill="brown")
+# Функция для обработки выбора задания в ComboBox
+def handle_selection(event):
+    selected_task = combo_box.get()
 
-canvas.create_polygon(mast_x, mast_y,
-                      mast_x + 5, mast_y + 10,
-                      mast_x - 5, mast_y + 10,
-                      fill="brown")
+    if selected_task == "Задание 1":
+        open_task1_window()
+    elif selected_task == "Задание 2":
+        open_task2_window()
+    else:
+        messagebox.showerror("Ошибка", "Выберите задание")
 
-# Рисование палки и зонта на желтой половине
-umbrella_x = width // 2 + boat_width // 2
-umbrella_y = mast_y
-umbrella_height = height // 2 - mast_y
+# Создание основного окна приложения
+root = tk.Tk()
+root.title("Мое приложение")
+root.geometry("400x300")
 
-canvas.create_rectangle(umbrella_x - 5, umbrella_y, umbrella_x + 5, height // 2,
-                        fill="orange")
+# Добавление ComboBox для выбора задания
+combo_box = tk.Combobox(root, values=["Задание 1", "Задание 2"])
+combo_box.pack()
+combo_box.bind("<<ComboboxSelected>>", handle_selection)
 
-canvas.create_polygon(umbrella_x, umbrella_y,
-                      umbrella_x + 5, umbrella_y + 10,
-                      umbrella_x - 5, umbrella_y + 10,
-                      fill="orange")
+# Задание 1: Создание формы для ввода данных
+task1_frame = tk.Frame(root)
+task1_frame.pack()
 
-# Запуск главного цикла окна
-window.mainloop()
-```
+task1_label = tk.Label(task1_frame, text="Введите значения x и y:")
+task1_label.pack()
 
-Теперь первая половина экрана имеет голубой цвет, а вторая половина разделена на синий и желтый цвета, создавая флаг Украины.
+task1_x_label = tk.Label(task1_frame, text="x:")
+task1_x_label.pack(side=tk.LEFT)
+
+task1_x_entry = tk.Entry(task1_frame)
+task1_x_entry.pack(side=tk.LEFT)
+
+task1_y_label = tk.Label(task1_frame, text="y:")
+task1_y_label.pack(side=tk.LEFT)
+
+task1_y_entry = tk.Entry(task1_frame)
+task1_y_entry.pack(side=tk.LEFT)
+
+# Задание 2: Создание формы для ввода данных
+task2_frame = tk.Frame(root)
+task2_frame.pack()
+
+task2_label = tk.Label(task2_frame, text="Введите значения f(x), y и xy:")
+task2_label.pack()
+
+task2_fx_label = tk.Label(task2_frame, text="f(x):")
+task2_fx_label.pack(side=tk.LEFT)
+
+task2_fx_entry = tk.Entry(task2_frame)
+task2_fx_entry.pack(side=tk.LEFT)
+
+task2_y_label = tk.Label(task2_frame, text="y:")
+task2_y_label.pack(side=tk.LEFT)
+
+task2_y_entry = tk.Entry(task2_frame)
+task2_y_entry.pack(side=tk.LEFT)
+
+task2_xy_label = tk.Label(task2_frame, text="xy:")
+task2_xy_label.pack(side=tk.LEFT)
+
+task2_xy_entry = tk.Entry(task2_frame)
+task2_xy_entry.pack(side=tk.LEFT)
+
+root.mainloop()
+``Обратите внимание, что в коде предполагается наличие двух фотографий с формулами, "formula1.png" и "formula2.png". Вы должны заменить эти имена файлов на соответствующие имена фотографий, которые вы используете. Также убедитесь, что фотографии находятся в той же папке, где находится ваш скрипт.
+
+Данный код позволяет выбрать одно из двух заданий с помощью ComboBox. При выборе задания открывается новое окно с формой для ввода данных и выводом результата вычислений. Фотография с формулой также отображается на форме.
+
+Вы можете добавить или изменить элементы интерфейса в соответствии с вашими потребностями. Также не забудьте добавить свои формулы и логику вычислений для индивидуальных заданий.
