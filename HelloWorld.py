@@ -1,133 +1,133 @@
-Хорошо! Ниже приведен полный код для выполнения лабораторной работы №2, включая оба индивидуальных задания.
+Конечно, я могу помочь вам с вашей лабораторной работой на языке C++. Давайте начнем с первой части.
 
-```python
-import tkinter as tk
-from tkinter import messagebox
-import math
+Часть 1:
 
-# Задание 1: Вычисление значения функции U(x, y)
-def calculate_u(x, y):
-    if x + y == 0:
-        return x * math.exp(-y * x)
-    elif 0 <= x + y < 3:
-        return x * math.sin(x)
-    else:
-        return y**x + math.cos(x)**3
+1. Задание: Напечатать заданное существительное во всех падежах.
 
-# Задание 2: Вычисление значения функции a
-def calculate_a(fx, y, xy):
-    if xy > 0:
-        return (fx + y)**2 - math.sqrt(fx * y)
-    elif xy < 0:
-        return (fx + y)**2 - math.sqrt(abs(fx * y))
-    else:
-        return (fx + y)**2 + 1
+```cpp
+#include <iostream>
+#include <string>
 
-# Функция для открытия нового окна с заданием 1
-def open_task1_window():
-    x = float(task1_x_entry.get())
-    y = float(task1_y_entry.get())
+int main() {
+    std::string noun;
+    std::cout << "Введите существительное: ";
+    std::cin >> noun;
 
-    result = calculate_u(x, y)
+    std::cout << "Именительный падеж (кто? что?): " << noun << std::endl;
+    std::cout << "Родительный падеж (кого? чего?): " << noun << "а" << std::endl;
+    std::cout << "Дательный падеж (кому? чему?): " << noun << "у" << std::endl;
+    std::cout << "Винительный падеж (кого? что?): " << noun << std::endl;
+    std::cout << "Творительный падеж (кем? чем?): " << noun << "ом" << std::endl;
+    std::cout << "Предложный падеж (о ком? о чём?): " << noun << "е" << std::endl;
 
-    new_window = tk.Toplevel(root)
-    new_window.title("Задание 1")
-    new_window.geometry("300x200")
+    return 0;
+}
+```
 
-    result_label = tk.Label(new_window, text=f"Результат: {result}")
-    result_label.pack()
+В этом коде мы сначала запрашиваем у пользователя существительное, а затем выводим его во всех падежах.
 
-    formula_photo = tk.PhotoImage(file="formula1.png")
-    formula_label = tk.Label(new_window, image=formula_photo)
-    formula_label.pack()
+2. Задание: Вычислить длину самого короткого слова в предложении из трех слов, разделенных пробелами.
 
-# Функция для открытия нового окна с заданием 2
-def open_task2_window():
-    fx = float(task2_fx_entry.get())
-    y = float(task2_y_entry.get())
-    xy = float(task2_xy_entry.get())
+```cpp
+#include <iostream>
+#include <string>
 
-    result = calculate_a(fx, y, xy)
+int main() {
+    std::string sentence;
+    std::cout << "Введите предложение из трех слов, разделенных пробелами: ";
+    std::getline(std::cin, sentence);
 
-    new_window = tk.Toplevel(root)
-    new_window.title("Задание 2")
-    new_window.geometry("300x200")
+    std::string word1, word2, word3;
+    std::istringstream iss(sentence);
+    iss >> word1 >> word2 >> word3;
 
-    result_label = tk.Label(new_window, text=f"Результат: {result}")
-    result_label.pack()
+    int shortestLength = std::min({word1.length(), word2.length(), word3.length()});
 
-    formula_photo = tk.PhotoImage(file="formula2.png")
-    formula_label = tk.Label(new_window, image=formula_photo)
-    formula_label.pack()
+    std::cout << "Длина самого короткого слова: " << shortestLength << std::endl;
 
-# Функция для обработки выбора задания в ComboBox
-def handle_selection(event):
-    selected_task = combo_box.get()
+    return 0;
+}
+```
 
-    if selected_task == "Задание 1":
-        open_task1_window()
-    elif selected_task == "Задание 2":
-        open_task2_window()
-    else:
-        messagebox.showerror("Ошибка", "Выберите задание")
+В этом коде мы сначала запрашиваем у пользователя предложение, а затем используем `std::istringstream` для разделения предложения на отдельные слова. Затем мы вычисляем длину каждого слова и находим самую короткую длину с помощью функции `std::min`. Результат выводится на экран.
 
-# Создание основного окна приложения
-root = tk.Tk()
-root.title("Мое приложение")
-root.geometry("400x300")
+Теперь перейдем ко второй части.
 
-# Добавление ComboBox для выбора задания
-combo_box = tk.Combobox(root, values=["Задание 1", "Задание 2"])
-combo_box.pack()
-combo_box.bind("<<ComboboxSelected>>", handle_selection)
+Часть 2:
 
-# Задание 1: Создание формы для ввода данных
-task1_frame = tk.Frame(root)
-task1_frame.pack()
+1. Задание: Сравнить три введенные строки и вывести их по убыванию длины строки, начиная каждый вывод с новой строки. Результаты работы программы записываются в файл.
 
-task1_label = tk.Label(task1_frame, text="Введите значения x и y:")
-task1_label.pack()
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <algorithm>
 
-task1_x_label = tk.Label(task1_frame, text="x:")
-task1_x_label.pack(side=tk.LEFT)
+int main() {
+    std::string str1, str2, str3;
+    std::cout << "Введите три строки: ";
+    std::cin >> str1 >> str2 >> str3;
 
-task1_x_entry = tk.Entry(task1_frame)
-task1_x_entry.pack(side=tk.LEFT)
+    std::ofstream outputFile("output.txt");
+    if (outputFile.is_open()) {
+        std::string strings[] = {str1, str2, str3};
+        std::sort(strings, strings + 3, [](const std::string& a, const std::string& b) {
+            return a.length() > b.length();
+        });
 
-task1_y_label = tk.Label(task1_frame, text="y:")
-task1_y_label.pack(side=tk.LEFT)
+        for (const std::string& str : strings) {
+            outputFile << str << std::endl;
+        }
 
-task1_y_entry = tk.Entry(task1_frame)
-task1_y_entry.pack(side=tk.LEFT)
+        outputFile.close();
+        std::cout << "Результаты записаны в файл output.txt." << std::endl;
+    } else {
+        std::cout << "Ошибка при открытии файла." << std::endl;
+    }
 
-# Задание 2: Создание формы для ввода данных
-task2_frame = tk.Frame(root)
-task2_frame.pack()
+    return 0;
+}
+```
 
-task2_label = tk.Label(task2_frame, text="Введите значения f(x), y и xy:")
-task2_label.pack()
+В этом коде мы сначала запрашиваем у пользователя три строки, а затем сортируем их по убыванию длины с помощью функции `std::sort` и лямбда-функции в качестве компаратора. Затем мы открываем файл `output.txt` для записи и поочередно записываем каждуюстроку в отсортированном порядке, разделяя их переводом строки. Наконец, мы закрываем файл и выводим сообщение об успешной записи.
 
-task2_fx_label = tk.Label(task2_frame, text="f(x):")
-task2_fx_label.pack(side=tk.LEFT)
+2. Задание: Изменить предыдущую программу так, чтобы строки не вводились вручную, а брались из входного файла.
 
-task2_fx_entry = tk.Entry(task2_frame)
-task2_fx_entry.pack(side=tk.LEFT)
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <algorithm>
 
-task2_y_label = tk.Label(task2_frame, text="y:")
-task2_y_label.pack(side=tk.LEFT)
+int main() {
+    std::ifstream inputFile("input.txt");
+    std::ofstream outputFile("output.txt");
+    if (inputFile.is_open() && outputFile.is_open()) {
+        std::string str1, str2, str3;
+        inputFile >> str1 >> str2 >> str3;
 
-task2_y_entry = tk.Entry(task2_frame)
-task2_y_entry.pack(side=tk.LEFT)
+        std::string strings[] = {str1, str2, str3};
+        std::sort(strings, strings + 3, [](const std::string& a, const std::string& b) {
+            return a.length() > b.length();
+        });
 
-task2_xy_label = tk.Label(task2_frame, text="xy:")
-task2_xy_label.pack(side=tk.LEFT)
+        for (const std::string& str : strings) {
+            outputFile << str << std::endl;
+        }
 
-task2_xy_entry = tk.Entry(task2_frame)
-task2_xy_entry.pack(side=tk.LEFT)
+        inputFile.close();
+        outputFile.close();
+        std::cout << "Результаты записаны в файл output.txt." << std::endl;
+    } else {
+        std::cout << "Ошибка при открытии файлов." << std::endl;
+    }
 
-root.mainloop()
-``Обратите внимание, что в коде предполагается наличие двух фотографий с формулами, "formula1.png" и "formula2.png". Вы должны заменить эти имена файлов на соответствующие имена фотографий, которые вы используете. Также убедитесь, что фотографии находятся в той же папке, где находится ваш скрипт.
+    return 0;
+}
+```
 
-Данный код позволяет выбрать одно из двух заданий с помощью ComboBox. При выборе задания открывается новое окно с формой для ввода данных и выводом результата вычислений. Фотография с формулой также отображается на форме.
+В этой версии кода мы открываем файл `input.txt` для чтения и файл `output.txt` для записи. Затем мы считываем строки из входного файла в переменные `str1`, `str2` и `str3`. После этого процесс аналогичен предыдущей программе: сортируем строки по убыванию длины и записываем результаты в файл `output.txt`. Наконец, мы закрываем оба файла и выводим сообщение об успешной записи.
 
-Вы можете добавить или изменить элементы интерфейса в соответствии с вашими потребностями. Также не забудьте добавить свои формулы и логику вычислений для индивидуальных заданий.
+Убедитесь, что у вас есть файлы `input.txt` и `output.txt` в той же папке, где находится исполняемый файл программы, и что входной файл содержит три строки, разделенные пробелами.
+
+Надеюсь, это поможет вам выполнить вашу лабораторную работу! Если у вас возникнут еще вопросы, не стесняйтесь задавать.
