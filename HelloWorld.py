@@ -1,133 +1,60 @@
-Конечно, я могу помочь вам с вашей лабораторной работой на языке C++. Давайте начнем с первой части.
+Извините за недоразумение. Если вам нужно создать окно с темной темой или модным оформлением, вы можете воспользоваться сторонней библиотекой `ttkthemes`. Она предоставляет различные темы оформления в Tkinter, включая темные темы.
 
-Часть 1:
+Установите `ttkthemes`, выполнив команду `pip install ttkthemes`.
 
-1. Задание: Напечатать заданное существительное во всех падежах.
+Вот пример кода, который создает окно с темной темой, отображает гиф-изображение по центру окна и использует `ttkthemes` для настройки оформления:
 
-```cpp
-#include <iostream>
-#include <string>
+```python
+import tkinter as tk
+from tkinter import ttk
+from PIL import Image, ImageTk
 
-int main() {
-    std::string noun;
-    std::cout << "Введите существительное: ";
-    std::cin >> noun;
+# Создание окна
+window = tk.Tk()
 
-    std::cout << "Именительный падеж (кто? что?): " << noun << std::endl;
-    std::cout << "Родительный падеж (кого? чего?): " << noun << "а" << std::endl;
-    std::cout << "Дательный падеж (кому? чему?): " << noun << "у" << std::endl;
-    std::cout << "Винительный падеж (кого? что?): " << noun << std::endl;
-    std::cout << "Творительный падеж (кем? чем?): " << noun << "ом" << std::endl;
-    std::cout << "Предложный падеж (о ком? о чём?): " << noun << "е" << std::endl;
+# Установка темной темы оформления
+style = ttk.Style(window)
+style.theme_use('clam')  # Выбор темы оформления (можно выбрать другую тему, если нужно)
 
-    return 0;
-}
+# Загрузка и отображение гиф-изображения
+image = Image.open("путь_к_вашей_гифке.gif")
+image_width, image_height = image.size
+
+# Получение размеров экрана
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+
+# Расчет координат для отображения гиф-изображения по центру окна
+x = (screen_width - image_width) // 2
+y = (screen_height - image_height) // 2
+
+# Создание виджета Label для отображения гиф-изображения
+label = ttk.Label(window)
+label.place(x=x, y=y)
+
+# Загрузка гиф-изображения в Label
+frames = []
+try:
+    while True:
+        frames.append(ImageTk.PhotoImage(image))
+        image.seek(len(frames))  # Переход к следующему кадру
+except EOFError:
+    pass
+
+# Функция для обновления изображения
+def update_image(frame):
+    label.configure(image=frames[frame])
+    window.after(100, update_image, (frame + 1) % len(frames))
+
+# Запуск обновления изображения
+update_image(0)
+
+# Запуск основного цикла окна
+window.mainloop()
 ```
 
-В этом коде мы сначала запрашиваем у пользователя существительное, а затем выводим его во всех падежах.
+В этом примере я использовал метод `place()` для размещения виджета `Label` с гиф-изображением по центру окна. Координаты расчета основаны на размерах изображения и размерах экрана.
 
-2. Задание: Вычислить длину самого короткого слова в предложении из трех слов, разделенных пробелами.
+Вы также можете настроить выбранную тему оформления, используя `style.theme_use()`. В примере я использовал тему 'clam', но вы можете выбрать другую тему из доступных в `ttkthemes`.
 
-```cpp
-#include <iostream>
-#include <string>
-
-int main() {
-    std::string sentence;
-    std::cout << "Введите предложение из трех слов, разделенных пробелами: ";
-    std::getline(std::cin, sentence);
-
-    std::string word1, word2, word3;
-    std::istringstream iss(sentence);
-    iss >> word1 >> word2 >> word3;
-
-    int shortestLength = std::min({word1.length(), word2.length(), word3.length()});
-
-    std::cout << "Длина самого короткого слова: " << shortestLength << std::endl;
-
-    return 0;
-}
-```
-
-В этом коде мы сначала запрашиваем у пользователя предложение, а затем используем `std::istringstream` для разделения предложения на отдельные слова. Затем мы вычисляем длину каждого слова и находим самую короткую длину с помощью функции `std::min`. Результат выводится на экран.
-
-Теперь перейдем ко второй части.
-
-Часть 2:
-
-1. Задание: Сравнить три введенные строки и вывести их по убыванию длины строки, начиная каждый вывод с новой строки. Результаты работы программы записываются в файл.
-
-```cpp
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <algorithm>
-
-int main() {
-    std::string str1, str2, str3;
-    std::cout << "Введите три строки: ";
-    std::cin >> str1 >> str2 >> str3;
-
-    std::ofstream outputFile("output.txt");
-    if (outputFile.is_open()) {
-        std::string strings[] = {str1, str2, str3};
-        std::sort(strings, strings + 3, [](const std::string& a, const std::string& b) {
-            return a.length() > b.length();
-        });
-
-        for (const std::string& str : strings) {
-            outputFile << str << std::endl;
-        }
-
-        outputFile.close();
-        std::cout << "Результаты записаны в файл output.txt." << std::endl;
-    } else {
-        std::cout << "Ошибка при открытии файла." << std::endl;
-    }
-
-    return 0;
-}
-```
-
-В этом коде мы сначала запрашиваем у пользователя три строки, а затем сортируем их по убыванию длины с помощью функции `std::sort` и лямбда-функции в качестве компаратора. Затем мы открываем файл `output.txt` для записи и поочередно записываем каждуюстроку в отсортированном порядке, разделяя их переводом строки. Наконец, мы закрываем файл и выводим сообщение об успешной записи.
-
-2. Задание: Изменить предыдущую программу так, чтобы строки не вводились вручную, а брались из входного файла.
-
-```cpp
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <algorithm>
-
-int main() {
-    std::ifstream inputFile("input.txt");
-    std::ofstream outputFile("output.txt");
-    if (inputFile.is_open() && outputFile.is_open()) {
-        std::string str1, str2, str3;
-        inputFile >> str1 >> str2 >> str3;
-
-        std::string strings[] = {str1, str2, str3};
-        std::sort(strings, strings + 3, [](const std::string& a, const std::string& b) {
-            return a.length() > b.length();
-        });
-
-        for (const std::string& str : strings) {
-            outputFile << str << std::endl;
-        }
-
-        inputFile.close();
-        outputFile.close();
-        std::cout << "Результаты записаны в файл output.txt." << std::endl;
-    } else {
-        std::cout << "Ошибка при открытии файлов." << std::endl;
-    }
-
-    return 0;
-}
-```
-
-В этой версии кода мы открываем файл `input.txt` для чтения и файл `output.txt` для записи. Затем мы считываем строки из входного файла в переменные `str1`, `str2` и `str3`. После этого процесс аналогичен предыдущей программе: сортируем строки по убыванию длины и записываем результаты в файл `output.txt`. Наконец, мы закрываем оба файла и выводим сообщение об успешной записи.
-
-Убедитесь, что у вас есть файлы `input.txt` и `output.txt` в той же папке, где находится исполняемый файл программы, и что входной файл содержит три строки, разделенные пробелами.
-
-Надеюсь, это поможет вам выполнить вашу лабораторную работу! Если у вас возникнут еще вопросы, не стесняйтесь задавать.
+Надеюсь, это поможет вам создать окно с темной темой и отображением гиф-изображения по центру с помощью Tkinter и `ttkthemes`!
