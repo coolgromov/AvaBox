@@ -1,5 +1,4 @@
 import pygame
-import os
 
 # Инициализация Pygame
 pygame.init()
@@ -17,8 +16,11 @@ gif = pygame.image.load(gif_path)
 gif_x = (window_width - gif.get_width()) // 2
 gif_y = (window_height - gif.get_height()) // 2
 
-# Определение скорости движения гифки
-speed = 5
+# Определение начального масштаба гифки
+scale = 1.0
+
+# Определение флага, указывающего на увеличение или уменьшение масштаба
+scaling_up = True
 
 # Основной цикл приложения
 running = True
@@ -28,21 +30,30 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Обновление координат для движения гифки
-    gif_x += speed
-    gif_y += speed
-
-    # Проверка, чтобы гифка не выходила за пределы окна
-    if gif_x < 0 or gif_x + gif.get_width() > window_width:
-        speed = -speed
-    if gif_y < 0 or gif_y + gif.get_height() > window_height:
-        speed = -speed
+    # Изменение масштаба гифки
+    if scaling_up:
+        scale += 0.01
+        if scale >= 1.5:
+            scaling_up = False
+    else:
+        scale -= 0.01
+        if scale <= 0.5:
+            scaling_up = True
 
     # Очистка экрана
     window.fill((0, 0, 0))
 
+    # Изменение размеров гиф-анимации с учетом масштаба
+    gif_width = int(gif.get_width() * scale)
+    gif_height = int(gif.get_height() * scale)
+    gif_scaled = pygame.transform.scale(gif, (gif_width, gif_height))
+
+    # Определение новых координат для отображения гифки
+    gif_x = (window_width - gif_width) // 2
+    gif_y = (window_height - gif_height) // 2
+
     # Отображение гиф-анимации
-    window.blit(gif, (gif_x, gif_y))
+    window.blit(gif_scaled, (gif_x, gif_y))
 
     # Обновление экрана
     pygame.display.flip()
