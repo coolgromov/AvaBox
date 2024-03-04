@@ -1,76 +1,110 @@
-import tkinter as tk
-
-class Document:
-    def __init__(self, number, date, content):
+class Component:
+    def __init__(self, number, name, price):
         self.number = number
-        self.date = date
-        self.content = content
+        self.name = name
+        self.price = price
 
-class Letter(Document):
-    def __init__(self, number, date, content, letter_type, correspondent):
-        super().__init__(number, date, content)
-        self.letter_type = letter_type
-        self.correspondent = correspondent
+class Motherboard(Component):
+    def __init__(self, number, name, price, socket_type, processor_count, memory_type, bus_speed):
+        super().__init__(number, name, price)
+        self.socket_type = socket_type
+        self.processor_count = processor_count
+        self.memory_type = memory_type
+        self.bus_speed = bus_speed
 
-class Order(Document):
-    def __init__(self, number, date, content, department, deadline, executor):
-        super().__init__(number, date, content)
-        self.department = department
-        self.deadline = deadline
-        self.executor = executor
+class Processor(Component):
+    def __init__(self, number, name, price, socket_type, core_count, clock_speed, technology):
+        super().__init__(number, name, price)
+        self.socket_type = socket_type
+        self.core_count = core_count
+        self.clock_speed = clock_speed
+        self.technology = technology
 
-class BusinessTrip(Document):
-    def __init__(self, number, date, content, employee, period, destination):
-        super().__init__(number, date, content)
-        self.employee = employee
-        self.period = period
-        self.destination = destination
+class HardDrive(Component):
+    def __init__(self, number, name, price, capacity, rotation_speed, interface_type):
+        super().__init__(number, name, price)
+        self.capacity = capacity
+        self.rotation_speed = rotation_speed
+        self.interface_type = interface_type
 
-class DocumentFactory:
+class ComponentFactory:
     @staticmethod
-    def create_document(doc_type, number, date, content, **kwargs):
-        if doc_type == "letter":
-            return Letter(number, date, content, **kwargs)
-        elif doc_type == "order":
-            return Order(number, date, content, **kwargs)
-        elif doc_type == "business_trip":
-            return BusinessTrip(number, date, content, **kwargs)
+    def create_component(component_type, number, name, price, **kwargs):
+        if component_type == "motherboard":
+            return Motherboard(number, name, price, **kwargs)
+        elif component_type == "processor":
+            return Processor(number, name, price, **kwargs)
+        elif component_type == "hard_drive":
+            return HardDrive(number, name, price, **kwargs)
         else:
-            raise ValueError("Invalid document type")
+            raise ValueError("Invalid component type")
 
-# Создание документов
-documents = [
-    DocumentFactory.create_document("letter", "001", "2024-02-28", "Содержание письма 1",
-                                    letter_type="входящее", correspondent="Корреспондент 1"),
-    DocumentFactory.create_document("order", "002", "2024-02-29", "Содержание приказа 1",
-                                    department="Подразделение 1", deadline="2024-03-10", executor="Исполнитель 1"),
-    DocumentFactory.create_document("business_trip", "003", "2024-03-01", "Содержание распоряжения о командировке 1",
-                                    employee="Сотрудник 1", period="2024-03-15 - 2024-03-20", destination="Место 1")
+# Создание комплектующих
+components = [
+    ComponentFactory.create_component("motherboard", "001", "Материнская плата 1", 100.0,
+                                      socket_type="Socket 1", processor_count=1,
+                                      memory_type="DDR4", bus_speed="2400 MHz"),
+    ComponentFactory.create_component("processor", "002", "Процессор 1", 200.0,
+                                      socket_type="Socket 1", core_count=4,
+                                      clock_speed="3.0 GHz", technology="14 nm"),
+    ComponentFactory.create_component("hard_drive", "003", "Жесткий диск 1", 50.0,
+                                      capacity="1 TB", rotation_speed="7200 RPM",
+                                      interface_type="SATA")
 ]
 
-# Вывод полного перечня документов
-for document in documents:
-    print(f"Номер: {document.number}")
-    print(f"Дата: {document.date}")
-    print(f"Содержание: {document.content}")
+# Вывод полной номенклатуры комплектующих
+for component in components:
+    print(f"Номер: {component.number}")
+    print(f"Наименование: {component.name}")
+    print(f"Цена: {component.price}")
+    if isinstance(component, Motherboard):
+        print(f"Тип сокета: {component.socket_type}")
+        print(f"Количество процессоров: {component.processor_count}")
+        print(f"Тип оперативной памяти: {component.memory_type}")
+        print(f"Частота системной шины: {component.bus_speed}")
+    elif isinstance(component, Processor):
+        print(f"Тип сокета: {component.socket_type}")
+        print(f"Количество ядер: {component.core_count}")
+        print(f"Тактовая частота: {component.clock_speed}")
+        print(f"Техпроцесс: {component.technology}")
+    elif isinstance(component, HardDrive):
+        print(f"Объем: {component.capacity}")
+        print(f"Скорость вращения: {component.rotation_speed}")
+        print(f"Тип интерфейса: {component.interface_type}")
     print()
 
-# Вывод содержания выбранного документа по номеру
-def show_document_content():
+# Вывод детальной информации по товару по номенклатурному номеру
+def show_component_details():
     number = entry.get()
-    for document in documents:
-        if document.number == number:
-            print(f"Содержание документа {number}: {document.content}")
+    for component in components:
+        if component.number == number:
+            print(f"Детальная информация по товару {number}:")
+            print(f"Наименование: {component.name}")
+            print(f"Цена: {component.price}")
+            if isinstance(component, Motherboard):
+                print(f"Тип сокета: {component.socket_type}")
+                print(f"Количество процессоров: {component.processor_count}")
+                print(f"Тип оперативной памяти: {component.memory_type}")
+                print(f"Частота системной шины: {component.bus_speed}")
+            elif isinstance(component, Processor):
+                print(f"Тип сокета: {component.socket_type}")
+                print(f"Количество ядер: {component.core_count}")
+                print(f"Тактовая частота: {component.clock_speed}")
+                print(f"Техпроцесс: {component.technology}")
+            elif isinstance(component, HardDrive):
+                print(f"Объем: {component.capacity}")
+                print(f"Скорость вращения: {component.rotation_speed}")
+                print(f"Тип интерфейса: {component.interface_type}")
             break
     else:
-        print(f"Документ с номером {number} не найден")
+        print(f"Товар с номером {number} не найден")
 
-# Создание графического интерфейса с полем для ввода номера документа и кнопкой для вывода содержания
+# Создание графического интерфейса с полем для ввода номенклатурного номера и кнопкой для вывода детальной информации
 root = tk.Tk()
-label = tk.Label(root, text="Номер документа:")
+label = tk.Label(root, text="Номенклатурный номер:")
 label.pack()
 entry = tk.Entry(root)
 entry.pack()
-button = tk.Button(root, text="Показать содержание", command=show_document_content)
+button = tk.Button(root, text="Показать детальную информацию", command=show_component_details)
 button.pack()
 root.mainloop()
