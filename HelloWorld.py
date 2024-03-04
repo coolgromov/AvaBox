@@ -1,110 +1,65 @@
-class Component:
-    def __init__(self, number, name, price):
-        self.number = number
-        self.name = name
-        self.price = price
+import xml.etree.ElementTree as ET
 
-class Motherboard(Component):
-    def __init__(self, number, name, price, socket_type, processor_count, memory_type, bus_speed):
-        super().__init__(number, name, price)
-        self.socket_type = socket_type
-        self.processor_count = processor_count
-        self.memory_type = memory_type
-        self.bus_speed = bus_speed
+class Applicant:
+    def __init__(self, last_name, first_name, middle_name, date_of_birth, ege_scores, desired_specialties):
+        self.last_name = last_name
+        self.first_name = first_name
+        self.middle_name = middle_name
+        self.date_of_birth = date_of_birth
+        self.ege_scores = ege_scores
+        self.desired_specialties = desired_specialties
 
-class Processor(Component):
-    def __init__(self, number, name, price, socket_type, core_count, clock_speed, technology):
-        super().__init__(number, name, price)
-        self.socket_type = socket_type
-        self.core_count = core_count
-        self.clock_speed = clock_speed
-        self.technology = technology
+    def to_txt(self, file_path):
+        with open(file_path, 'w') as file:
+            file.write(f"Фамилия: {self.last_name}\n")
+            file.write(f"Имя: {self.first_name}\n")
+            file.write(f"Отчество: {self.middle_name}\n")
+            file.write(f"Дата рождения: {self.date_of_birth}\n")
+            file.write("Баллы за ЕГЭ:\n")
+            for subject, score in self.ege_scores.items():
+                file.write(f"{subject}: {score}\n")
+            file.write("Желательные специальности:\n")
+            for specialty in self.desired_specialties:
+                file.write(f"{specialty}\n")
 
-class HardDrive(Component):
-    def __init__(self, number, name, price, capacity, rotation_speed, interface_type):
-        super().__init__(number, name, price)
-        self.capacity = capacity
-        self.rotation_speed = rotation_speed
-        self.interface_type = interface_type
+    def to_xml(self, file_path):
+        root = ET.Element("applicant")
+        last_name_elem = ET.SubElement(root, "last_name")
+        last_name_elem.text = self.last_name
+        first_name_elem = ET.SubElement(root, "first_name")
+        first_name_elem.text = self.first_name
+        middle_name_elem = ET.SubElement(root, "middle_name")
+        middle_name_elem.text = self.middle_name
+        date_of_birth_elem = ET.SubElement(root, "date_of_birth")
+        date_of_birth_elem.text = self.date_of_birth
+        ege_scores_elem = ET.SubElement(root, "ege_scores")
+        for subject, score in self.ege_scores.items():
+            subject_elem = ET.SubElement(ege_scores_elem, "subject")
+            subject_elem.text = subject
+            score_elem = ET.SubElement(ege_scores_elem, "score")
+            score_elem.text = str(score)
+        desired_specialties_elem = ET.SubElement(root, "desired_specialties")
+        for specialty in self.desired_specialties:
+            specialty_elem = ET.SubElement(desired_specialties_elem, "specialty")
+            specialty_elem.text = specialty
 
-class ComponentFactory:
-    @staticmethod
-    def create_component(component_type, number, name, price, **kwargs):
-        if component_type == "motherboard":
-            return Motherboard(number, name, price, **kwargs)
-        elif component_type == "processor":
-            return Processor(number, name, price, **kwargs)
-        elif component_type == "hard_drive":
-            return HardDrive(number, name, price, **kwargs)
-        else:
-            raise ValueError("Invalid component type")
+        tree = ET.ElementTree(root)
+        tree.write(file_path, encoding="utf-8", xml_declaration=True)
 
-# Создание комплектующих
-components = [
-    ComponentFactory.create_component("motherboard", "001", "Материнская плата 1", 100.0,
-                                      socket_type="Socket 1", processor_count=1,
-                                      memory_type="DDR4", bus_speed="2400 MHz"),
-    ComponentFactory.create_component("processor", "002", "Процессор 1", 200.0,
-                                      socket_type="Socket 1", core_count=4,
-                                      clock_speed="3.0 GHz", technology="14 nm"),
-    ComponentFactory.create_component("hard_drive", "003", "Жесткий диск 1", 50.0,
-                                      capacity="1 TB", rotation_speed="7200 RPM",
-                                      interface_type="SATA")
-]
+# Пример использования
 
-# Вывод полной номенклатуры комплектующих
-for component in components:
-    print(f"Номер: {component.number}")
-    print(f"Наименование: {component.name}")
-    print(f"Цена: {component.price}")
-    if isinstance(component, Motherboard):
-        print(f"Тип сокета: {component.socket_type}")
-        print(f"Количество процессоров: {component.processor_count}")
-        print(f"Тип оперативной памяти: {component.memory_type}")
-        print(f"Частота системной шины: {component.bus_speed}")
-    elif isinstance(component, Processor):
-        print(f"Тип сокета: {component.socket_type}")
-        print(f"Количество ядер: {component.core_count}")
-        print(f"Тактовая частота: {component.clock_speed}")
-        print(f"Техпроцесс: {component.technology}")
-    elif isinstance(component, HardDrive):
-        print(f"Объем: {component.capacity}")
-        print(f"Скорость вращения: {component.rotation_speed}")
-        print(f"Тип интерфейса: {component.interface_type}")
-    print()
+# Создание экземпляра абитуриента
+applicant = Applicant(
+    last_name="Иванов",
+    first_name="Иван",
+    middle_name="Иванович",
+    date_of_birth="01.01.2000",
+    ege_scores={"Математика": 80, "Физика": 90, "Русский язык": 70},
+    desired_specialties=["Информатика", "Физика", "Математика"]
+)
 
-# Вывод детальной информации по товару по номенклатурному номеру
-def show_component_details():
-    number = entry.get()
-    for component in components:
-        if component.number == number:
-            print(f"Детальная информация по товару {number}:")
-            print(f"Наименование: {component.name}")
-            print(f"Цена: {component.price}")
-            if isinstance(component, Motherboard):
-                print(f"Тип сокета: {component.socket_type}")
-                print(f"Количество процессоров: {component.processor_count}")
-                print(f"Тип оперативной памяти: {component.memory_type}")
-                print(f"Частота системной шины: {component.bus_speed}")
-            elif isinstance(component, Processor):
-                print(f"Тип сокета: {component.socket_type}")
-                print(f"Количество ядер: {component.core_count}")
-                print(f"Тактовая частота: {component.clock_speed}")
-                print(f"Техпроцесс: {component.technology}")
-            elif isinstance(component, HardDrive):
-                print(f"Объем: {component.capacity}")
-                print(f"Скорость вращения: {component.rotation_speed}")
-                print(f"Тип интерфейса: {component.interface_type}")
-            break
-    else:
-        print(f"Товар с номером {number} не найден")
+# Сохранение информации об абитуриенте в формате txt
+applicant.to_txt("applicant.txt")
 
-# Создание графического интерфейса с полем для ввода номенклатурного номера и кнопкой для вывода детальной информации
-root = tk.Tk()
-label = tk.Label(root, text="Номенклатурный номер:")
-label.pack()
-entry = tk.Entry(root)
-entry.pack()
-button = tk.Button(root, text="Показать детальную информацию", command=show_component_details)
-button.pack()
-root.mainloop()
+# Сохранение информации об абитуриенте в формате xml
+applicant.to_xml("applicant.xml")
