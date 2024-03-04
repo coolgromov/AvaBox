@@ -1,90 +1,137 @@
-import base64
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
-from cryptography.hazmat.backends import default_backend
-import os
+import tkinter as tk
+from tkinter import filedialog
+from googletrans import Translator
+import random
+
 
 class FileStream:
     def __init__(self, file_path):
         self.file_path = file_path
 
     def write_data(self, data):
-        with open(self.file_path, 'wb') as file:
+        with open(self.file_path, 'w', encoding='utf-8') as file:
             file.write(data)
 
     def read_data(self):
-        with open(self.file_path, 'rb') as file:
+        with open(self.file_path, 'r', encoding='utf-8') as file:
             return file.read()
 
-# Базовый декоратор
-class FileStreamDecorator:
+
+class TranslationDecorator:
     def __init__(self, stream):
         self.stream = stream
+        self.translator = Translator()
 
-    def write_data(self, data):
-        self.stream.write_data(data)
+    def translate(self, text, lang):
+        translation = self.translator.translate(text, dest=lang)
+        return translation.text
+
+    def write_data(self, data, lang):
+        translated_data = self.translate(data, lang)
+        self.stream.write_data(translated_data)
 
     def read_data(self):
         return self.stream.read_data()
 
-# Декоратор для кодирования в формате Base64
-class Base64EncodingDecorator(FileStreamDecorator):
-    def write_data(self, data):
-        encoded_data = base64.b64encode(data)
-        self.stream.write_data(encoded_data)
 
-    def read_data(self):
-        encoded_data = self.stream.read_data()
-        return base64.b64decode(encoded_data)
+class WordPermutationEncryptionDecorator:
+    def __init__(self, stream):
+        self.stream = stream
 
-# Декоратор для шифрования криптографическим алгоритмом
-class EncryptionDecorator(FileStreamDecorator):
-    def __init__(self, stream, key):
-        super().__init__(stream)
-        self.key = key
+    def encrypt(self, text, permutation_scheme):
+        words = text.split()
+        encrypted_words = [words[i] for i in permutation_scheme]
+        return ' '.join(encrypted_words)
 
-    def write_data(self, data):
-        iv = os.urandom(16)  # Генерация случайного вектора инициализации
-        cipher = Cipher(algorithms.AES(self.key), modes.CBC(iv), backend=default_backend())
-        encryptor = cipher.encryptor()
-        padder = padding.PKCS7(algorithms.AES.block_size).padder()
+    def decrypt(self, text, permutation_scheme):
+        words = text.split()
+        decrypted_words = [''] * len(words)
+        for i, index in enumerate(permutation_scheme):
+            decrypted_words[index] = words[i]
+        return ' '.join(decrypted_words)
 
-        padded_data = padder.update(data) + padder.finalize()
-        encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
+    def write_data(self, data, permutation_scheme):
+        encrypted_data = self.encrypt(data, permutation_scheme)
+        self.stream.write_data(encrypted_data)
 
-        self.stream.write_data(iv + encrypted_data)
-
-    def read_data(self):
+    def read_data(self, permutation_scheme):
         encrypted_data = self.stream.read_data()
-        iv = encrypted_data[:16]
-        encrypted_data = encrypted_data[16:]
+        decrypted_data = self.decrypt(encrypted_data, permutation_scheme)
+        return decrypted_data
 
-        cipher = Cipher(algorithms.AES(self.key), modes.CBC(iv), backend=default_backend())
-        decryptor = cipher.decryptor()
-        unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
 
-        decrypted_data = decryptor.update(encrypted_data) + decryptor.finalize()
-        unpadded_data = unpadder.update(decrypted_data) + unpadder.finalize()
+class Application(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Text Transformation App")
+        self.geometry("400x200")
+        self.file_path = ""
 
-        return unpadded_data
+        self.translation_var = tk.StringVar()
+        self.permutation_var = tk.StringVar()
 
-# Пример использования
-file_path = 'data.bin'
+        self.create_widgets()
 
-# Создание экземпляра FileStream
-stream = FileStream(file_path)
+    def create_widgets(self):
+        label = tk.Label(self, text="Select a file:")
+        label.pack()
 
-# Создание декорированного экземпляра FileStream с кодированием в Base64
-base64_stream = Base64EncodingDecorator(stream)
+        select_button = tk.Button(self, text="Select", command=self.select_file)
+        select_button.pack()
 
-# Создание декорированного экземпляра FileStream с шифрованием
-key = b'thisisasecretkey'
-encrypted_stream = EncryptionDecorator(base64_stream, key)
+        translate_button = tk.Button(self, text="Translate", command=self.translate_file)
+        translate_button.pack()
 
-# Запись данных в файл с применением всех преобразований
-data = b'Hello, World!'
-encrypted_stream.write_data(data)
+        encrypt_button = tk.Button(self, text="Encrypt", command=self.encrypt_file)
+        encrypt_button.pack()
 
-# Чтение данных из файла с обратными преобразованиями
-decoded_data = encrypted_stream.read_data()
-print(decoded_data)  # Вывод: b'Hello, World!'
+        decrypt_button = tk.Button(self, text="Decrypt", command=self.decrypt_file)
+        decrypt_button.pack()
+
+    def select_file(self):
+        self.file_path = filedialog.askopenfilename()
+
+    def translate_file(self):
+        lang = self.translation_var.get()
+
+        if not self.file_path:
+            return
+
+        stream = FileStream(self.file_path)
+        translator = TranslationDecorator(stream)
+
+        translated_data = translator.read_data()
+        translated_data = translator.translate(translated_data, lang)
+
+        stream.write_data(translated_data)
+
+    def encrypt_file(self):
+        permutation_scheme = self.permutation_var.get()
+
+        if not self.file_path:
+            return
+
+        stream = FileStream(self.file_path)
+        encryptor = WordPermutationEncryptionDecorator(stream)
+
+        encrypted_data = encryptor.read_data(permutation_scheme)
+
+        stream.write_data(encrypted_data)
+
+    def decrypt_file(self):
+        permutation_scheme = self.permutation_var.get()
+
+        if not self.file_path:
+            return
+
+        stream = FileStream(self.file_path)
+        decryptor = WordPermutationEncryptionDecorator(stream)
+
+        decrypted_data = decryptor.read_data(permutation_scheme)
+
+        stream.write_data(decrypted_data)
+
+
+if __name__ == "__main__":
+    app = Application()
+    app.mainloop()
