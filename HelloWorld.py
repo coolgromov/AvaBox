@@ -22,12 +22,12 @@ class TranslationDecorator:
         self.stream = stream
         self.translator = Translator()
 
-    def translate(self, text, lang):
-        translation = self.translator.translate(text, dest=lang)
+    def translate(self, text):
+        translation = self.translator.translate(text, src='ru', dest='en')
         return translation.text
 
-    def write_data(self, data, lang):
-        translated_data = self.translate(data, lang)
+    def write_data(self, data):
+        translated_data = self.translate(data)
         self.stream.write_data(translated_data)
 
     def read_data(self):
@@ -67,9 +67,6 @@ class Application(tk.Tk):
         self.geometry("400x200")
         self.file_path = ""
 
-        self.translation_var = tk.StringVar()
-        self.permutation_var = tk.StringVar()
-
         self.create_widgets()
 
     def create_widgets(self):
@@ -92,8 +89,6 @@ class Application(tk.Tk):
         self.file_path = filedialog.askopenfilename()
 
     def translate_file(self):
-        lang = self.translation_var.get()
-
         if not self.file_path:
             return
 
@@ -101,35 +96,42 @@ class Application(tk.Tk):
         translator = TranslationDecorator(stream)
 
         translated_data = translator.read_data()
-        translated_data = translator.translate(translated_data, lang)
+        translated_data = translator.translate(translated_data)
 
-        stream.write_data(translated_data)
+        output_path = "output.txt"
+        output_stream = FileStream(output_path)
+        output_stream.write_data(translated_data)
 
     def encrypt_file(self):
-        permutation_scheme = self.permutation_var.get()
-
         if not self.file_path:
             return
 
         stream = FileStream(self.file_path)
         encryptor = WordPermutationEncryptionDecorator(stream)
 
+        permutation_scheme = [2, 1, 0]  # Пример схемы перестановки слов
+
         encrypted_data = encryptor.read_data(permutation_scheme)
 
-        stream.write_data(encrypted_data)
+        encrypt_path = "encrypt.txt"
+        encrypt_stream = FileStream(encrypt_path)
+        encrypt_stream.write_data(encrypted_data)
 
     def decrypt_file(self):
-        permutation_scheme = self.permutation_var.get()
-
         if not self.file_path:
             return
 
-        stream = FileStream(self.file_path)
-        decryptor = WordPermutationEncryptionDecorator(stream)
+        encrypt_path = "encrypt.txt"
+        encrypt_stream = FileStream(encrypt_path)
+        encryptor = WordPermutationEncryptionDecorator(encrypt_stream)
 
-        decrypted_data = decryptor.read_data(permutation_scheme)
+        permutation_scheme = [2, 1, 0]  # Пример схемы перестановки слов
 
-        stream.write_data(decrypted_data)
+        encrypted_data = encryptor.read_data(permutation_scheme)
+
+        decrypt_path = "decrypt.txt"
+        decrypt_stream = FileStream(decrypt_path)
+        decrypt_stream.write_data(encrypted_data)
 
 
 if __name__ == "__main__":
