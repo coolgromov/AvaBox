@@ -1,71 +1,55 @@
 import tkinter as tk
-from tkinter import filedialog
-from googletrans import Translator
-from cryptography.fernet import Fernet
 
-translator = Translator()
+class HelpHandler:
+    def __init__(self, successor=None):
+        self.successor = successor
 
-def translate_text():
-    input_filename = 'input.txt'
-    output_filename = 'output.txt'
-    translate_to = 'en'
+    def handle_help(self, widget):
+        if self.successor:
+            self.successor.handle_help(widget)
 
-    with open(input_filename, 'r') as input_file:
-        text = input_file.read()
+class WindowHandler(HelpHandler):
+    def handle_help(self, widget):
+        if isinstance(widget, tk.Tk):
+            print("Справка о главном окне")
+        else:
+            super().handle_help(widget)
 
-    translated_text = translator.translate(text, dest=translate_to).text
+class ButtonHandler(HelpHandler):
+    def handle_help(self, widget):
+        if isinstance(widget, tk.Button):
+            print("Справка о кнопке:", widget['text'])
+        else:
+            super().handle_help(widget)
 
-    with open(output_filename, 'w') as output_file:
-        output_file.write(translated_text)
+class DialogHandler(HelpHandler):
+    def handle_help(self, widget):
+        if isinstance(widget, tk.Toplevel) and widget.title() == "Печать документов":
+            print("Справка о диалоговом окне 'Печать документов'")
+        else:
+            super().handle_help(widget)
 
-    print('Translation complete!')
+# Создаем иерархию обработчиков
+handler = WindowHandler(ButtonHandler(DialogHandler()))
 
-def encrypt_text():
-    input_filename = 'output.txt'
-    output_filename = 'encrypt.txt'
-    encryption_key = Fernet.generate_key()
-    cipher_suite = Fernet(encryption_key)
+# Создаем графический интерфейс
+root = tk.Tk()
+root.title("Help System")
 
-    with open(input_filename, 'r') as input_file:
-        text = input_file.read().encode()
+# Функция для обработки события щелчка правой кнопкой мыши
+def show_help(event):
+    widget = event.widget
+    handler.handle_help(widget)
 
-    encrypted_text = cipher_suite.encrypt(text)
+# Привязываем событие щелчка правой кнопкой мыши к функции show_help
+root.bind("<Button-3>", show_help)
 
-    with open(output_filename, 'wb') as output_file:
-        output_file.write(encrypted_text)
+# Создаем кнопку и диалоговое окно для тестирования
+button = tk.Button(root, text="Печать")
+button.pack()
 
-    print('Encryption complete!')
+dialog = tk.Toplevel(root)
+dialog.title("Печать документов")
 
-def decrypt_text():
-    input_filename = 'encrypt.txt'
-    output_filename = 'decrypt.txt'
-    encryption_key = Fernet.generate_key()
-    cipher_suite = Fernet(encryption_key)
-
-    with open(input_filename, 'rb') as input_file:
-        encrypted_text = input_file.read()
-
-    decrypted_text = cipher_suite.decrypt(encrypted_text).decode()
-
-    with open(output_filename, 'w') as output_file:
-        output_file.write(decrypted_text)
-
-    print('Decryption complete!')
-
-def main():
-    root = tk.Tk()
-    root.title('Text Transformation')
-
-    translate_button = tk.Button(root, text='Translate', command=translate_text)
-    translate_button.pack()
-
-    encrypt_button = tk.Button(root, text='Encrypt', command=encrypt_text)
-    encrypt_button.pack()
-
-    decrypt_button = tk.Button(root, text='Decrypt', command=decrypt_text)
-    decrypt_button.pack()
-
-    root.mainloop()
-
-if __name__ == '__main__':
-    main()
+# Запускаем главный цикл обработки событий
+root.mainloop()
