@@ -1,87 +1,55 @@
 import tkinter as tk
-from tkinter import messagebox
 
-class WindowObject:
-    def __init__(self, name):
+class GUIElement:
+    def __init__(self, name, parent=None):
         self.name = name
-        self.help_text = "Справка для объекта окна"
+        self.parent = parent
+        self.help_text = ""
+
+    def set_help_text(self, help_text):
+        self.help_text = help_text
 
     def get_help_text(self):
         return self.help_text
 
-class ButtonObject:
-    def __init__(self, name, parent_window):
-        self.name = name
-        self.parent_window = parent_window
-        self.help_text = "Справка для кнопки"
+    def show_help(self):
+        help_text = self.get_help_text()
+        if help_text:
+            print(help_text)
+        elif self.parent:
+            self.parent.show_help()
 
-    def get_help_text(self):
-        return self.help_text
+class Button(GUIElement):
+    def __init__(self, name, parent=None):
+        super().__init__(name, parent)
 
-class DialogObject:
-    def __init__(self, name, parent_window):
-        self.name = name
-        self.parent_window = parent_window
-        self.help_text = "Справка для диалогового окна"
+class Dialog(GUIElement):
+    def __init__(self, name, parent=None):
+        super().__init__(name, parent)
 
-    def get_help_text(self):
-        return self.help_text
+class TextEditor(GUIElement):
+    def __init__(self, name, parent=None):
+        super().__init__(name, parent)
 
-class GeneralHelpObject:
-    def __init__(self):
-        self.help_text = "Общая справка"
+# Создаем элементы графического интерфейса
+text_editor = TextEditor("Текстовый редактор")
+dialog = Dialog("Диалоговое окно 'Печать документов'", parent=text_editor)
+print_button = Button("Кнопка 'Печать'", parent=dialog)
 
-    def get_help_text(self):
-        return self.help_text
+# Устанавливаем справочную информацию для элементов
+text_editor.set_help_text("Общая справка о текстовом редакторе")
+dialog.set_help_text("Справка о диалоговом окне 'Печать документов'")
+print_button.set_help_text("Справка о кнопке 'Печать'")
 
-class HelpChain:
-    def __init__(self):
-        self.chain = self.build_chain()
+# Функция-обработчик щелчка правой кнопкой мыши
+def show_help_info():
+    clicked_element = print_button  # Здесь нужно получить объект, по которому был произведен щелчок
+    clicked_element.show_help()
 
-    def build_chain(self):
-        window_obj = WindowObject("Окно")
-        button_obj = ButtonObject("Кнопка", window_obj)
-        dialog_obj = DialogObject("Диалоговое окно", window_obj)
-        general_help_obj = GeneralHelpObject()
+# Создаем окно с кнопкой и контекстным меню
+window = tk.Tk()
+button = tk.Button(window, text="Правая кнопка мыши", command=show_help_info)
+button.pack()
 
-        window_obj.help_successor = button_obj
-        button_obj.help_successor = dialog_obj
-        dialog_obj.help_successor = general_help_obj
-
-        return window_obj
-
-    def get_help(self, obj):
-        current_obj = self.chain
-
-        while current_obj:
-            if isinstance(obj, type(current_obj)):
-                return current_obj.get_help_text()
-
-            current_obj = current_obj.help_successor
-
-        return "Справка не найдена"
-
-class Application(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.help_chain = HelpChain()
-        self.create_widgets()
-
-    def create_widgets(self):
-        button = tk.Button(self, text="Печать")
-        button.pack()
-        button.bind("<Button-3>", self.show_context_menu)
-
-    def show_context_menu(self, event):
-        context_menu = tk.Menu(self, tearoff=0)
-        context_menu.add_command(label="Справка", command=lambda: self.show_help(event))
-        context_menu.post(event.x_root, event.y_root)
-
-    def show_help(self, event):
-        widget = event.widget
-        help_text = self.help_chain.get_help(widget)
-        messagebox.showinfo("Справка", help_text)
-
-if __name__ == "__main__":
-    app = Application()
-    app.mainloop()
+# Запускаем главный цикл обработки событий
+window.mainloop()
