@@ -1,176 +1,87 @@
 import tkinter as tk
 from tkinter import messagebox
 
-class HelpHandler:
-    def __init__(self, successor=None):
-        self.successor = successor
+class WindowObject:
+    def __init__(self, name):
+        self.name = name
+        self.help_text = "Справка для объекта окна"
 
-    def handle_help_request(self, widget):
-        if self.successor:
-            self.successor.handle_help_request(widget)
-        else:
-            messagebox.showinfo("Справка", "Справочная информация отсутствует.")
+    def get_help_text(self):
+        return self.help_text
 
-class ButtonHelpHandler(HelpHandler):
-    def handle_help_request(self, widget):
-        if isinstance(widget, tk.Button):
-            messagebox.showinfo("Справка", f"Справка о кнопке '{widget["text"]}'")
-        else:
-            super().handle_help_request(widget)
+class ButtonObject:
+    def __init__(self, name, parent_window):
+        self.name = name
+        self.parent_window = parent_window
+        self.help_text = "Справка для кнопки"
 
-class DialogHelpHandler(HelpHandler):
-    def handle_help_request(self, widget):
-        if isinstance(widget, tk.Toplevel):
-            messagebox.showinfo("Справка", f"Справка о диалоговом окне '{widget.title()}'")
-        else:
-            super().handle_help_request(widget)
+    def get_help_text(self):
+        return self.help_text
 
-class GeneralHelpHandler(HelpHandler):
-    def handle_help_request(self, widget):
-        messagebox.showinfo("Справка", "Общая справка об объекте")
+class DialogObject:
+    def __init__(self, name, parent_window):
+        self.name = name
+        self.parent_window = parent_window
+        self.help_text = "Справка для диалогового окна"
+
+    def get_help_text(self):
+        return self.help_text
+
+class GeneralHelpObject:
+    def __init__(self):
+        self.help_text = "Общая справка"
+
+    def get_help_text(self):
+        return self.help_text
+
+class HelpChain:
+    def __init__(self):
+        self.chain = self.build_chain()
+
+    def build_chain(self):
+        window_obj = WindowObject("Окно")
+        button_obj = ButtonObject("Кнопка", window_obj)
+        dialog_obj = DialogObject("Диалоговое окно", window_obj)
+        general_help_obj = GeneralHelpObject()
+
+        window_obj.help_successor = button_obj
+        button_obj.help_successor = dialog_obj
+        dialog_obj.help_successor = general_help_obj
+
+        return window_obj
+
+    def get_help(self, obj):
+        current_obj = self.chain
+
+        while current_obj:
+            if isinstance(obj, type(current_obj)):
+                return current_obj.get_help_text()
+
+            current_obj = current_obj.help_successor
+
+        return "Справка не найдена"
 
 class Application(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Справочная программа")
-        self.help_handler = ButtonHelpHandler(DialogHelpHandler(GeneralHelpHandler()))
+        self.help_chain = HelpChain()
+        self.create_widgets()
 
-        self.bind('<Button-3>', self.show_help)
+    def create_widgets(self):
+        button = tk.Button(self, text="Печать")
+        button.pack()
+        button.bind("<Button-3>", self.show_context_menu)
+
+    def show_context_menu(self, event):
+        context_menu = tk.Menu(self, tearoff=0)
+        context_menu.add_command(label="Справка", command=lambda: self.show_help(event))
+        context_menu.post(event.x_root, event.y_root)
 
     def show_help(self, event):
         widget = event.widget
-        self.help_handler.handle_help_request(widget)
+        help_text = self.help_chain.get_help(widget)
+        messagebox.showinfo("Справка", help_text)
 
 if __name__ == "__main__":
     app = Application()
     app.mainloop()
-
-Вот неоптимизированный код для решения задачи:
-
-```python
-def count_odd_numbers(numbers):
-    count = 0
-    for num in numbers:
-        if num % 2 != 0:
-            count += 1
-    return count
-
-def count_multiple_of_3_not_multiple_of_5(numbers):
-    count = 0
-    for num in numbers:
-        if num % 3 == 0 and num % 5 != 0:
-            count += 1
-    return count
-
-def count_odd_numbers_at_even_positions(numbers):
-    count = 0
-    for i, num in enumerate(numbers):
-        if i % 2 == 0 and num % 2 != 0:
-            count += 1
-    return count
-
-# Пример использования
-n = 10
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-odd_count = count_odd_numbers(numbers)
-multiple_of_3_not_multiple_of_5_count = count_multiple_of_3_not_multiple_of_5(numbers)
-odd_numbers_at_even_positions_count = count_odd_numbers_at_even_positions(numbers)
-
-print("а) Количество нечетных чисел:", odd_count)
-print("б) Количество чисел, кратных 3 и не кратных 5:", multiple_of_3_not_multiple_of_5_count)
-print("в) Количество чисел с четными порядковыми номерами и нечетными значениями:", odd_numbers_at_even_positions_count)
-```
-
-И вот оптимизированный код для решения задачи:
-
-```python
-def count_odd_numbers(numbers):
-    return sum(1 for num in numbers if num % 2 != 0)
-
-def count_multiple_of_3_not_multiple_of_5(numbers):
-    return sum(1 for num in numbers if num % 3 == 0 and num % 5 != 0)
-
-def count_odd_numbers_at_even_positions(numbers):
-    return sum(1 for i, num in enumerate(numbers) if i % 2 == 0 and num % 2 != 0)
-
-# Пример использования
-n = 10
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-odd_count = count_odd_numbers(numbers)
-multiple_of_3_not_multiple_of_5_count = count_multiple_of_3_not_multiple_of_5(numbers)
-odd_numbers_at_even_positions_count = count_odd_numbers_at_even_positions(numbers)
-
-print("а) Количество нечетных чисел:", odd_count)
-print("б) Количество чисел, кратных 3 и не кратных 5:", multiple_of_3_not_multiple_of_5_count)
-print("в) Количество чисел с четными порядковыми номерами и нечетными значениями:", odd_numbers_at_even_positions_count)
-```
-
-В оптимизированном коде используется генератор списков и функция `sum()` для подсчета количества соответствующих элементов. Это позволяет избежать явного использования циклов и временных переменных для подсчета.
-
-import tkinter as tk
-
-
-class A:
-    def methodOne(self):
-        return 'Метод methodOne() класса A'
-
-
-class B:
-    def methodTwo(self):
-        return 'Метод methodTwo() класса B'
-
-
-class D(A, B):
-    def methodOne(self):
-        return 'Метод methodOne() класса D'
-
-    def methodThree(self):
-        student_full_name = 'Иванов Иван Иванович'  # Замените на ФИО студента
-        return f'ФИО студента: {student_full_name}'
-
-    def __str__(self):
-        return 'Класс D'
-
-
-def show_result():
-    result_text.set(d.methodOne() + '\n' + d.methodTwo() + '\n' + d.methodThree())
-
-
-def show_class_name():
-    class_name_text.set(str(d))
-
-
-# Создание объекта класса D
-d = D()
-
-# Создание графического интерфейса
-window = tk.Tk()
-window.title('Пример работы наследования')
-
-# Создание виджетов
-result_label = tk.Label(window, text='Результат:')
-result_label.pack()
-
-result_text = tk.StringVar()
-result_text.set('')
-result_text_label = tk.Label(window, textvariable=result_text)
-result_text_label.pack()
-
-show_result_button = tk.Button(window, text='Показать результат', command=show_result)
-show_result_button.pack()
-
-class_name_label = tk.Label(window, text='Имя класса:')
-class_name_label.pack()
-
-class_name_text = tk.StringVar()
-class_name_text.set('')
-class_name_text_label = tk.Label(window, textvariable=class_name_text)
-class_name_text_label.pack()
-
-show_class_name_button = tk.Button(window, text='Показать имя класса', command=show_class_name)
-show_class_name_button.pack()
-
-# Запуск главного цикла обработки событий
-window.mainloop()
