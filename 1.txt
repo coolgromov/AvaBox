@@ -1,16 +1,1 @@
---Создает бэкап в формате 'dbname.bak' 1.bak
-DECLARE @to varchar(100)
-DECLARE @dbname varchar(100)
-DECLARE @path varchar(400)
----------------------------------
-SET @dbname = '1' -- имя базы данных
-SET @to = 'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER01\MSSQL\Backup\'-- Каталог хранения
----------------------------------
-SET @path = @to + @dbname + '_' +
-cast(day(getdate()) as varchar(5)) + '.' +
-cast(month(getdate()) as varchar(5)) + '.' +
-cast(year(getdate()) as varchar(5)) + '-' +
-replace(cast(CONVERT(varchar(8), GETDATE(), 108) as varchar(8))+ + '.bak', ':', '.')
-BACKUP DATABASE @dbname TO DISK=@path WITH NOFORMAT, INIT,COMPRESSION,
-NAME = @dbname,
-SKIP, NOREWIND, NOUNLOAD, STATS = 10, CHECKSUM
+1.0
