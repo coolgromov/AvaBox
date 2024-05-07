@@ -1,55 +1,75 @@
 import tkinter as tk
+from tkinter import messagebox, filedialog
+import sys
+import os
 
-class GUIElement:
-    def __init__(self, name, parent=None):
-        self.name = name
-        self.parent = parent
-        self.help_text = ""
+class CharacterCounterApp:
+    def __init__(self):
+        self.window = tk.Tk()
+        self.window.title("test1")
+        self.window.geometry("600x400")
+        self.version = '1.0'
+        self.create_menu()
+        self.create_widgets()
 
-    def set_help_text(self, help_text):
-        self.help_text = help_text
+    def create_menu(self):
+        self.menu_bar = tk.Menu(self.window)
+        self.window.config(menu=self.menu_bar)
 
-    def get_help_text(self):
-        return self.help_text
+        self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Файл", menu=self.file_menu)
+        self.file_menu.add_command(label="Загрузить файл", command=self.load_file)
+        self.file_menu.add_separator()
+        self.file_menu.add_command(label="Выход", command=self.window.quit)
+
+        self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Справка", menu=self.help_menu)
+        self.help_menu.add_command(label="О программе", command=self.show_about)
+        self.help_menu.add_command(label="Обновление ПО", command=self.check_update)
+        self.help_menu.add_command(label="Справка", command=self.show_help)
+
+    def create_widgets(self):
+        self.text_entry = tk.Text(self.window, height=10, width=40)
+        self.text_entry.pack()
+        self.count_button = tk.Button(self.window, text="Подсчитать", bg="green", command=self.count_characters)
+        self.count_button.pack()
+
+        self.count_label = tk.Label(self.window, text="Количество символов: 0")
+        self.count_label.pack()
+
+    def count_characters(self, refresh=None):
+        text = self.text_entry.get("1.0", "end-1c")
+        character_count = len(text)
+        if refresh:
+            character_count = len(refresh) - 1
+        self.count_label.config(text=f"Количество символов: {character_count}")
+
+    def show_about(self):
+        messagebox.showinfo("О программе", f"Название: Counter Application\nВерсия: {self.version}\nАвтор: Бабаев Роман")
 
     def show_help(self):
-        help_text = self.get_help_text()
-        if help_text:
-            print(help_text)
-        elif self.parent:
-            self.parent.show_help()
+        messagebox.showinfo("Справка", "Это программа для подсчета количества символов в тексте.\nВведите текст в поле ввода и нажмите кнопку 'Подсчитать', чтобы узнать количество символов.")
 
-class Button(GUIElement):
-    def __init__(self, name, parent=None):
-        super().__init__(name, parent)
+    def check_update(self):
+        import urllib.request
+        with urllib.request.urlopen("https://raw.githubusercontent.com/coolgromov/AvaBox/main/1.txt") as response:
+            remote_version = response.read().decode().strip()
+        if self.version == remote_version:
+            messagebox.showinfo("Обновление ПО", "Программа не требует обновления")
+            return
+        else:
+            self.version = remote_version
+            messagebox.showinfo("Обновление ПО", "Программа успешно обновилась до последней версии")
 
-class Dialog(GUIElement):
-    def __init__(self, name, parent=None):
-        super().__init__(name, parent)
+    def load_file(self):
+        file_path = filedialog.askopenfilename(filetypes=[("Текстовые файлы", "*.txt")])
+        if file_path:
+            with open(file_path, "r", encoding='utf-8') as file:
+                text = file.read()
+            self.count_characters(refresh=text)
 
-class TextEditor(GUIElement):
-    def __init__(self, name, parent=None):
-        super().__init__(name, parent)
+    def run(self):
+        self.window.mainloop()
 
-# Создаем элементы графического интерфейса
-text_editor = TextEditor("Текстовый редактор")
-dialog = Dialog("Диалоговое окно 'Печать документов'", parent=text_editor)
-print_button = Button("Кнопка 'Печать'", parent=dialog)
-
-# Устанавливаем справочную информацию для элементов
-text_editor.set_help_text("Общая справка о текстовом редакторе")
-dialog.set_help_text("Справка о диалоговом окне 'Печать документов'")
-print_button.set_help_text("Справка о кнопке 'Печать'")
-
-# Функция-обработчик щелчка правой кнопкой мыши
-def show_help_info():
-    clicked_element = print_button  # Здесь нужно получить объект, по которому был произведен щелчок
-    clicked_element.show_help()
-
-# Создаем окно с кнопкой и контекстным меню
-window = tk.Tk()
-button = tk.Button(window, text="Правая кнопка мыши", command=show_help_info)
-button.pack()
-
-# Запускаем главный цикл обработки событий
-window.mainloop()
+app = CharacterCounterApp()
+app.run()
