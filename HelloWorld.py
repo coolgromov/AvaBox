@@ -6,9 +6,9 @@ import os
 class CharacterCounterApp:
     def __init__(self):
         self.window = tk.Tk()
-        self.window.title("новый год")
+        self.window.title("Обновленная программа")
         self.window.geometry("600x400")
-        self.version = '1.0'
+        self.version = '1.3'
         self.create_menu()
         self.create_widgets()
 
