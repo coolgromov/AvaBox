@@ -8,7 +8,7 @@ class CharacterCounterApp:
         self.window = tk.Tk()
         self.window.title("Обновленная программа")
         self.window.geometry("600x400")
-        self.version = '1.3'
+        self.version = '1.1.1'
         self.create_menu()
         self.create_widgets()
 
@@ -31,7 +31,7 @@ class CharacterCounterApp:
     def create_widgets(self):
         self.text_entry = tk.Text(self.window, height=10, width=40)
         self.text_entry.pack()
-        self.count_button = tk.Button(self.window, text="Подсчитать", bg="blue", command=self.count_characters)
+        self.count_button = tk.Button(self.window, text="Подсчитать", bg="red", command=self.count_characters)
         self.count_button.pack()
 
         self.count_label = tk.Label(self.window, text="Количество символов: 0")
