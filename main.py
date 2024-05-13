@@ -44,7 +44,7 @@ class CharacterCounterApp:
         self.count_label.config(text=f"Количество символов: {character_count}")
 
     def show_about(self):
-        messagebox.showinfo("О программе", f"Название: Counter Application\nВерсия: 1.0\nАвтор: Бабаев Роман")
+        messagebox.showinfo("О программе", f"Название: Counter Application\nВерсия: {self.version}\nАвтор: Бабаев Роман")
 
     def show_help(self):
         messagebox.showinfo("Справка", "Это программа для подсчета количества символов в тексте.\nВведите текст в поле ввода и нажмите кнопку 'Подсчитать', чтобы узнать количество символов.")
