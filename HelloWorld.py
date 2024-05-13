@@ -8,7 +8,7 @@ class CharacterCounterApp:
         self.window = tk.Tk()
         self.window.title("Обновленная программа")
         self.window.geometry("600x400")
-        self.version = '1.1.1'
+        self.version = '1.1.2'
         self.create_menu()
         self.create_widgets()
 
