@@ -8,7 +8,7 @@ class CharacterCounterApp:
         self.window.title("Подсчет символов в тексте")
         self.window.geometry("600x400")
         self.create_menu()
-        self.version = '1.1'
+        self.version = '1.2'
         self.create_widgets()
 
     def create_menu(self):
