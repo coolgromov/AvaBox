@@ -15,7 +15,12 @@
 
 ## AvaCity
 
-Написанные модули для самого [популярного сервера](https://github.com/AvaCity/avacity-async) по игре «Аватария»
+<p align="center">
+  <img src="https://avatars.githubusercontent.com/u/55620083?v=4" alt="Avataria" />
+</p>
+
+AvaCity - это игровой сервер, частично совместимый с клиентом игры «Аватария»
+Данный репозиторий содержит кастомные модули для самого [популярного сервера](https://github.com/AvaCity/avacity-async) по игре «Аватария»
 
 ## Особенности сборки
 
