@@ -11,8 +11,7 @@
 
 ## AvaCity
 
-Написанные модули для самого популярного сервера по игре Аватария  
-[AvaCity](https://github.com/AvaCity/avacity-async)
+Написанные модули для самого [популярного сервера](https://github.com/AvaCity/avacity-async) по игре «Аватария»
 
 ## Особенности сборки
 
